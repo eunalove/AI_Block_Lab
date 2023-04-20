@@ -2,12 +2,16 @@
 <html lang="ko">
 <meta charset="UTF-8">
 
+<link rel="stylesheet" href="main.css">
 
 <script src="blockly/blockly_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/ko.js"></script>
 
 <body>
+<div id="main">
+    <!-- 메인 화면 구성 요소 추가 -->
+
     <script>
 
         Blockly.Blocks['start'] = {
@@ -387,6 +391,15 @@
 
 </script>
 
+<div id="overlay">
+    <div id="nickname-box">
+        <h2>닉네임을 입력해주세요.</h2>
+        <input type="text" id="nickname-input" placeholder="닉네임">
+        <button id="start-button">AI_Block_Lab 참여</button>
+    </div>
+</div>
+
+<script src="main.js"></script>
 
 </body>
 </html>
