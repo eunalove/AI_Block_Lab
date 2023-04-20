@@ -1,1 +1,1 @@
-web: java -jar build/libs/AI_Block_Lab-0.0.1-SNAPSHOT.jar
+web: java -jar AI_Block_Lab-0.0.1-SNAPSHOT.jar
