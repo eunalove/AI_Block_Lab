@@ -1,0 +1,29 @@
+[33mcommit 7e2e051638456272017d78a7962fb6d607dd9044[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/front_main[m[33m)[m
+Author: eunalove <88129325+eunalove@users.noreply.github.com>
+Date:   Thu Apr 20 18:24:50 2023 +0900
+
+    #2 입장 시 닉네임 생성 모달창 구현
+
+[33mcommit 94a842304245ea854af93f0f124eb89a0da42d30[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/develop[m[33m, [m[1;32mmaster[m[33m, [m[1;32mdevelop[m[33m)[m
+Author: eunalove <88129325+eunalove@users.noreply.github.com>
+Date:   Thu Apr 20 10:28:37 2023 +0900
+
+    #1 시도- jar파일 이동 및 그에 따른 Procfile 수정
+
+[33mcommit 84e13e893068d598125ff1f25f00cbb97181aafb[m
+Author: eunalove <88129325+eunalove@users.noreply.github.com>
+Date:   Thu Apr 20 10:23:42 2023 +0900
+
+    #1 시도- 번들.zip 삭제 및 Procfile 공식사이트 참조
+
+[33mcommit 17f5b2dde956e164fd6251bca7ed716877ce475a[m
+Author: eunalove <88129325+eunalove@users.noreply.github.com>
+Date:   Thu Apr 20 10:19:52 2023 +0900
+
+    #1 시도- 번들.zip 생성 및 Procfile에 deploy명시
+
+[33mcommit f10d0302dd50dce5d2776b4e109c87165b485728[m
+Author: eunalove <88129325+eunalove@users.noreply.github.com>
+Date:   Wed Apr 19 21:28:44 2023 +0900
+
+     Build SpringBoot with Java 17 and Gradle
