@@ -12,10 +12,14 @@
 <body>
 
 <div id="overlay">
-    <div id="nickname-box">
-        <h2>닉네임을 입력해주세요.</h2>
-        <input type="text" id="nickname-input" placeholder="닉네임">
-        <button id="start-button">AI_Block_Lab 참여</button>
+    <div id="login-box">
+        <h2 id="auth-title">로그인을 해주세요.</h2>
+        <input type="text" id="id-input" placeholder="아이디">
+        <input type="text" id="pw-input" placeholder="비밀번호">
+        <div class="button-container">
+        <button id="join-button">회원가입</button>
+        <button id="start-button">로그인</button>
+        </div>
     </div>
 </div>
 
@@ -414,6 +418,36 @@
     </div>
 </div>
 
+
+<script>
+    const toggleButton = document.getElementById('join-button');
+    const authTitle = document.getElementById('auth-title');
+    const startButton = document.getElementById('start-button');
+    let isSignUp = false;
+
+    toggleButton.addEventListener('click', () => {
+        isSignUp = !isSignUp;
+        if (isSignUp) {
+            authTitle.textContent = '회원가입을 해주세요.';
+            startButton.textContent = '회원가입 완료';
+            toggleButton.textContent = '로그인';
+        } else {
+            authTitle.textContent = '로그인을 해주세요.';
+            startButton.textContent = '로그인';
+            toggleButton.textContent = '회원가입';
+        }
+    });
+
+    startButton.addEventListener('click', () => {
+        if (isSignUp) {
+            // 회원가입 처리 코드를 여기에 작성하세요.
+        } else {
+            // 로그인 처리 코드를 여기에 작성하세요.
+        }
+        // 처리 완료 후 창을 닫습니다.
+        document.getElementById('overlay').style.display = 'none';
+    });
+</script>
 
 </body>
 </html>
