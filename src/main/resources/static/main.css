@@ -25,12 +25,12 @@ body {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    width: 500px;
-    height: 230px;
+    width: 480px;
+    height: 235px;
 }
 
 h2 {
-    margin-bottom: 5px; /* 간격을 좁히기 위해 값을 줄임 */
+    margin-bottom: 12px;
 }
 
 #id-input {
@@ -39,6 +39,7 @@ h2 {
     margin: 10px 0 20px 0;
     border-radius: 5px;
     border: 1px solid #ccc;
+    margin: 10px 0;
 }
 
 #pw-input {
