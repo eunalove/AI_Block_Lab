@@ -19,19 +19,30 @@ body {
     position: relative;
 }
 
-#nickname-box {
+#login-box {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 480px;
+    height: 235px;
 }
 
 h2 {
-    margin-bottom: 5px; /* 간격을 좁히기 위해 값을 줄임 */
+    margin-bottom: 12px;
 }
 
-#nickname-input {
+#id-input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+}
+
+#pw-input {
     width: 90%;
     padding: 10px;
     margin: 10px 0 20px 0;
@@ -39,11 +50,23 @@ h2 {
     border: 1px solid #ccc;
 }
 
-#start-button {
+#login-button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 130px;
+}
+
+#join-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 35px;
+    width: 130px;
 }

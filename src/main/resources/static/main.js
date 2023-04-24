@@ -1,4 +1,4 @@
-document.getElementById("start-button").addEventListener("click", function() {
+document.getElementById("login-button").addEventListener("click", function() {
     const nickname = document.getElementById("nickname-input").value;
 
     if (nickname === "") {
@@ -8,3 +8,24 @@ document.getElementById("start-button").addEventListener("click", function() {
         // 닉네임이 입력된 후 메인 화면에서 필요한 작업을 수행
     }
 });
+
+function login(userId, password) {
+    return fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: userId, password: password })
+    });
+}
+
+// 회원가입 요청
+function signUp(userId, password) {
+    return fetch('/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: userId, password: password })
+    });
+}
