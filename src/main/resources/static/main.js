@@ -43,33 +43,43 @@ function showToast(message, duration) {
     }, duration);
 }
 
-function generateInviteLink(inviteUUID) {
-    const currentURL = window.location.href;
-    const url = new URL(currentURL);
-    url.searchParams.set("invite", inviteUUID);
-    return url.toString();
+async function createInviteLink() {
+    const response = await fetch("/createInvite");
+    const { inviteUUID } = await response.json();
+
+    return window.location.origin + window.location.pathname + "?invite=" + inviteUUID;
 }
 
-// URL에서 invite 파라미터를 가져오는 함수
-function getInviteParameter() {
+function getInviteUUID() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('invite');
+    return urlParams.get("invite");
 }
 
-// 로그인이나 회원가입 후 처리
-function onLoggedIn(userId) {
-    if (isModalClosed) {
-        // 기존 로그인 모달 창을 완전히 삭제합니다.
-        const overlay = document.getElementById("overlay");
-        overlay.parentNode.removeChild(overlay);
-    }
+async function handleInviteLink(inviteUUID) {
+    if (inviteUUID) {
+        const response = await fetch("/addUserToInvite", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ inviteUUID, userId: loggedInUserId })
+        });
 
-    const invite = getInviteParameter();
-    if (invite) {
-        // invite 파라미터를 포함한 URL로 리다이렉트
-        window.location.href = `/index.html?invite=${invite}`;
-    } else {
-        // 일반 로그인 처리
-        window.location.href = "/index.html";
+        if (response.ok) {
+            console.log("사용자가 초대 링크에 추가되었습니다.");
+        } else {
+            console.log("초대 링크에 사용자를 추가하는 데 실패했습니다.");
+        }
     }
 }
+
+async function onLoggedIn(userId) {
+    // 여기에 로그인 후 처리 코드를 작성하세요.
+    // 예: 채팅창 열기, 사용자 정보 표시 등
+
+    const inviteUUID = getInviteUUID();
+    if (inviteUUID) {
+        await handleInviteLink(inviteUUID);
+    }
+}
+
