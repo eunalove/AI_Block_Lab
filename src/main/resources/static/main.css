@@ -50,7 +50,7 @@ h2 {
     border: 1px solid #ccc;
 }
 
-#start-button {
+#login-button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -69,4 +69,26 @@ h2 {
     cursor: pointer;
     margin-right: 35px;
     width: 130px;
+}
+
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
 }

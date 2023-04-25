@@ -1,4 +1,4 @@
-document.getElementById("start-button").addEventListener("click", function() {
+document.getElementById("login-button").addEventListener("click", function() {
     const nickname = document.getElementById("nickname-input").value;
 
     if (nickname === "") {
@@ -9,23 +9,36 @@ document.getElementById("start-button").addEventListener("click", function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var modal = document.getElementById('join-box');
-    var btn = document.getElementById('join-button');
-    var span = document.getElementById('closeModal');
+function login(userId, password) {
+    return fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: userId, password: password })
+    });
+}
 
-    btn.onclick = function() {
-        modal.style.display = 'block';
-    }
+// 회원가입 요청
+function signUp(userId, password) {
+    return fetch('/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: userId, password: password })
+    });
+}
 
-    span.onclick = function() {
-        modal.style.display = 'none';
-    }
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
-});
+function showToast(message, duration) {
+    var toast = document.getElementById('toast');
+    var toastMessage = document.getElementById('toastMessage');
 
+    toastMessage.innerText = message;
+    toast.classList.add('show');
+
+    setTimeout(function() {
+        toast.classList.remove('show');
+    }, duration);
+}
