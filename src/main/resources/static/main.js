@@ -42,3 +42,34 @@ function showToast(message, duration) {
         toast.classList.remove('show');
     }, duration);
 }
+
+function generateInviteLink(inviteUUID) {
+    const currentURL = window.location.href;
+    const url = new URL(currentURL);
+    url.searchParams.set("invite", inviteUUID);
+    return url.toString();
+}
+
+// URL에서 invite 파라미터를 가져오는 함수
+function getInviteParameter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('invite');
+}
+
+// 로그인이나 회원가입 후 처리
+function onLoggedIn(userId) {
+    if (isModalClosed) {
+        // 기존 로그인 모달 창을 완전히 삭제합니다.
+        const overlay = document.getElementById("overlay");
+        overlay.parentNode.removeChild(overlay);
+    }
+
+    const invite = getInviteParameter();
+    if (invite) {
+        // invite 파라미터를 포함한 URL로 리다이렉트
+        window.location.href = `/index.html?invite=${invite}`;
+    } else {
+        // 일반 로그인 처리
+        window.location.href = "/index.html";
+    }
+}

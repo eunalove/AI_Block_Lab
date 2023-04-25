@@ -443,6 +443,7 @@
         }
     });
 
+    let isModalClosed = false;
 
     loginButton.addEventListener('click', () => {
         if (isSignUp) {
@@ -477,8 +478,9 @@
                         console.log("로그인 성공");
                         // 처리 완료 후 창을 닫습니다.
                         document.getElementById('overlay').style.display = 'none';
-
+                        isModalClosed = true;
                         showToast("로그인 성공!", 1000);
+                        onLoggedIn(userId);
 
                     } else {
                         // 로그인 실패
@@ -487,6 +489,17 @@
                 });
         }
 
+    });
+
+    const inviteButton = document.getElementById("invite-button");
+    inviteButton.addEventListener("click", async () => {
+        // 서버에 UUID 생성을 요청하고 반환된 UUID 값을 사용
+        const response = await fetch("/createInvite");
+        const { inviteUUID } = await response.json();
+
+        // 초대 링크를 생성하고 표시
+        const inviteLink = generateInviteLink(inviteUUID);
+        alert(`초대 링크: ${inviteLink}`);
     });
 </script>
 
