@@ -29,3 +29,16 @@ function signUp(userId, password) {
         body: JSON.stringify({ userId: userId, password: password })
     });
 }
+
+
+function showToast(message, duration) {
+    var toast = document.getElementById('toast');
+    var toastMessage = document.getElementById('toastMessage');
+
+    toastMessage.innerText = message;
+    toast.classList.add('show');
+
+    setTimeout(function() {
+        toast.classList.remove('show');
+    }, duration);
+}

@@ -25,6 +25,10 @@
     </div>
 </div>
 
+<div id="toast" class="toast">
+    <span id="toastMessage"></span>
+</div>
+
 
 <script>
 
@@ -419,6 +423,7 @@
 </div>
 
 
+
 <script>
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
@@ -438,6 +443,7 @@
         }
     });
 
+
     loginButton.addEventListener('click', () => {
         if (isSignUp) {
             // 회원가입 처리 코드를 여기에 작성하세요.
@@ -449,6 +455,9 @@
                     if (response.ok) {
                         // 회원가입 성공
                         console.log("회원가입 성공");
+                        document.getElementById('overlay').style.display = 'none';
+
+                        showToast("회원가입 성공!", 2000);
                     } else {
                         // 회원가입 실패
                         console.log("회원가입 실패");
@@ -466,6 +475,8 @@
                         console.log("로그인 성공");
                         // 처리 완료 후 창을 닫습니다.
                         document.getElementById('overlay').style.display = 'none';
+
+                        showToast("로그인 성공!", 2000);
                     } else {
                         // 로그인 실패
                         console.log("로그인 실패");
