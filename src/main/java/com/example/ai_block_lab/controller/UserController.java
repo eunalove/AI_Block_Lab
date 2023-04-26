@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -32,4 +35,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    @PostMapping("/createInvite")
+    public String createInvite() {
+        String user_Invitation_link = UUID.randomUUID().toString();
+        userMapper.createInvite(user_Invitation_link);
+        return user_Invitation_link;
+    }
+
+    @PostMapping("/addUserToInvite")
+    public void addUserToInvite(@RequestParam String userId, @RequestParam String user_Invitation_link) {
+        userMapper.addUserToInvite(userId, user_Invitation_link);
+    }
+
 }

@@ -4,12 +4,12 @@ public class User {
 
     private String userId;
     private String password;
-    private String User_Invitation_link;
+    private String user_Invitation_link;
 
     public User(String userId, String password, String user_Invitation_link) {
         this.userId = userId;
         this.password = password;
-        User_Invitation_link = user_Invitation_link;
+        this.user_Invitation_link = user_Invitation_link;
     }
 
     public String getUserId() {
@@ -29,10 +29,10 @@ public class User {
     }
 
     public String getUser_Invitation_link() {
-        return User_Invitation_link;
+        return user_Invitation_link;
     }
 
     public void setUser_Invitation_link(String user_Invitation_link) {
-        User_Invitation_link = user_Invitation_link;
+        this.user_Invitation_link = user_Invitation_link;
     }
 }

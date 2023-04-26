@@ -2,14 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.ai_block_lab.mapper.UserMapper">
 
-  <insert id="insertUser" parameterType="com.example.ai_block_lab.model.User">
-    INSERT INTO `User` (userId, User_Invitation_link, `password`)
-    VALUES (#{userId}, #{User_Invitation_link}, #{password})
+  <insert id="insertUser" parameterType="com.example.model.User">
+    INSERT INTO User (userId, user_Invitation_link, password)
+    VALUES (#{userId}, #{userInvitationLink}, #{password})
   </insert>
 
   <select id="findByUserIdAndPassword" resultType="com.example.ai_block_lab.model.User">
     SELECT * FROM `User`
     WHERE userId = #{userId} AND `password` = #{password}
   </select>
+
+  <select id="createInvite" resultType="String">
+    SELECT UUID()
+  </select>
+
+  <insert id="addUserToInvite" parameterType="map">
+    UPDATE User
+    SET user_Invitation_link = #{inviteUUID}
+    WHERE userId = #{userId}
+  </insert>
 
 </mapper>
