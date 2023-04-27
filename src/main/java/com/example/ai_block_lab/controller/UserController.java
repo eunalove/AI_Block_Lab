@@ -40,4 +40,15 @@ public class UserController {
         }
     }
 
+    @PostMapping("/api/update-invitation-link")
+    public ResponseEntity<?> updateInvitationLink(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId");
+        String invitationLink = request.get("invitationLink");
+
+        User user = new User(userId, invitationLink, null);
+        userMapper.updateInvitationLink(user);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

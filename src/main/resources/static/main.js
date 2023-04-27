@@ -79,16 +79,17 @@ async function handleInviteLink(inviteUUID) {
     }
 }
 
-async function updateUser_Invitation_link(userId, user_Invitation_link) {
-    return fetch("/updateUser_Invitation_link", {
-        method: "POST",
+async function updateUserInvitationLink(userId, invitationLink) {
+    const response = await fetch('/api/update-invitation-link', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ userId, user_Invitation_link })
+        body: JSON.stringify({ userId, invitationLink })
     });
-}
 
+    return response;
+}
 async function getUser_Invitation_link(userId) {
     const response = await fetch(`/getUser_Invitation_link?userId=${userId}`);
     const { user_Invitation_link } = await response.json();
