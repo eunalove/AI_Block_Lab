@@ -4,11 +4,10 @@ import com.example.ai_block_lab.mapper.UserMapper;
 import com.example.ai_block_lab.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -27,25 +26,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
         User foundUser = userMapper.findByUserIdAndPassword(user.getUserId(), user.getPassword());
         if (foundUser != null) {
-            return ResponseEntity.ok().build();
+            String uuid = UUID.randomUUID().toString();
+            foundUser.setUser_Invitation_link(uuid);
+            userMapper.updateInvitationLink(foundUser);
+
+            Map<String, String> responseBody = Collections.singletonMap("invitationLink", uuid);
+            return ResponseEntity.ok(responseBody);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-    }
-
-    @PostMapping("/createInvite")
-    public String createInvite() {
-        String user_Invitation_link = UUID.randomUUID().toString();
-        userMapper.createInvite(user_Invitation_link);
-        return user_Invitation_link;
-    }
-
-    @PostMapping("/addUserToInvite")
-    public void addUserToInvite(@RequestParam String userId, @RequestParam String user_Invitation_link) {
-        userMapper.addUserToInvite(userId, user_Invitation_link);
     }
 
 }

@@ -429,6 +429,18 @@
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
     let isSignUp = false;
+    let invitationLink;
+
+    function getInvitationFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('invitation');
+    }
+
+    // 페이지가 로드될 때 invitation 파라미터 값을 확인하고, 있으면 저장하기
+    const invitationParam = getInvitationFromURL();
+    if (invitationParam) {
+        invitationLink = `${window.location.origin}/?invitation=${invitationParam}`;
+    }
 
     joinButton.addEventListener('click', () => {
         isSignUp = !isSignUp;
@@ -470,15 +482,23 @@
             var password = document.getElementById("pw-input").value;
 
             login(userId, password)
-                .then(function(response) {
+                .then(async function(response) {
                     if (response.ok) {
                         // 로그인 성공
                         console.log("로그인 성공");
                         // 처리 완료 후 창을 닫습니다.
                         document.getElementById('overlay').style.display = 'none';
-                        isModalClosed = true;
+
                         showToast("로그인 성공!", 1000);
-                        onLoggedIn(userId);
+
+                        // UUID를 받아 초대 링크 생성
+                        const responseBody = await response.json();
+                        const uuid = responseBody.invitationLink;
+                        invitationLink = `${window.location.origin}/?invitation=${uuid}`;
+
+
+                        // 자동으로 UUID가 포함된 링크로 이동
+                        window.location.href = invitationLink;
 
                     } else {
                         // 로그인 실패
@@ -489,16 +509,29 @@
 
     });
 
-    const inviteButton = document.getElementById("invite-button");
-    inviteButton.addEventListener("click", async () => {
-        // 서버에 UUID 생성을 요청하고 반환된 UUID 값을 사용
-        const response = await fetch("/createInvite");
-        const { inviteUUID } = await response.json();
-
-        // 초대 링크를 생성하고 표시
-        const inviteLink = generateInviteLink(inviteUUID);
-        alert(`초대 링크: ${inviteLink}`);
+    // 초대 링크 보기 버튼
+    document.getElementById('invite-button').addEventListener('click', () => {
+        if (invitationLink) {
+            alert(`초대 링크: ${invitationLink}`);
+        } else {
+            alert('로그인 후 초대 링크를 생성할 수 있습니다.');
+        }
     });
+
+    // 페이지 로드 시 로그인 창 표시 여부를 확인하는 함수
+    function checkLoginStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const invitation = urlParams.get("invitation");
+
+        if (invitation) {
+            // UUID가 포함된 경우 로그인 창을 표시하지 않음
+            document.getElementById("overlay").style.display = "none";
+        }
+    }
+
+    // 페이지 로드가 완료되면 checkLoginStatus 함수를 실행
+    window.onload = checkLoginStatus;
+
 </script>
 
 </body>
