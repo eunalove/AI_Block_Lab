@@ -12,4 +12,10 @@
     WHERE userId = #{userId} AND `password` = #{password}
   </select>
 
+  <update id="updateInvitationLink" parameterType="com.example.ai_block_lab.model.User">
+    UPDATE `User`
+    SET user_Invitation_link = #{user_Invitation_link}
+    WHERE userId = #{userId}
+  </update>
+
 </mapper>

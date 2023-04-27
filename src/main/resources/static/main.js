@@ -42,3 +42,74 @@ function showToast(message, duration) {
         toast.classList.remove('show');
     }, duration);
 }
+
+async function createInviteLink() {
+    const response = await fetch("/createInvite", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const { inviteUUID } = await response.json();
+
+    return window.location.origin + window.location.pathname + "?invite=" + inviteUUID;
+}
+
+function getInviteUUID() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("invite");
+}
+
+
+async function handleInviteLink(inviteUUID) {
+    if (inviteUUID) {
+        const response = await fetch("/addUserToInvite", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ inviteUUID, userId: loggedInUserId })
+        });
+
+        if (response.ok) {
+            console.log("사용자가 초대 링크에 추가되었습니다.");
+        } else {
+            console.log("초대 링크에 사용자를 추가하는 데 실패했습니다.");
+        }
+    }
+}
+
+async function updateUserInvitationLink(userId, invitationLink) {
+    const response = await fetch('/api/update-invitation-link', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, invitationLink })
+    });
+
+    return response;
+}
+async function getUser_Invitation_link(userId) {
+    const response = await fetch(`/getUser_Invitation_link?userId=${userId}`);
+    const { user_Invitation_link } = await response.json();
+    return user_Invitation_link;
+}
+
+async function onLoggedIn(userId) {
+    // 기존 코드
+
+    const inviteUUID = getInviteUUID();
+    if (inviteUUID) {
+        await handleInviteLink(inviteUUID);
+    } else {
+        // 새로운 UUID 생성
+        const response = await fetch("/createInvite");
+        const { inviteUUID } = await response.json();
+
+        // 현재 링크에 UUID 추가
+        const newLink = window.location.origin + window.location.pathname + "?invite=" + inviteUUID;
+        window.location.href = newLink;
+    }
+
+}
