@@ -189,7 +189,8 @@
                         // UUID를 받아 초대 링크 생성
                         const responseBody = await response.json();
                         const uuid = responseBody.invitationLink;
-                        invitationLink = `${window.location.origin}/?invitation=${uuid}`;
+                        // index.html-> main.html로 리다이렉션하는 경우 isRedirection 파라메타를 추가함
+                        invitationLink = `${window.location.origin}/main.html?invitation=${uuid}&isRedirection=true`
 
                         // URL에 invitation 파라미터가 있는 경우 사용자의 user_Invitation_link를 업데이트합니다.
                         if (invitationParam) {
