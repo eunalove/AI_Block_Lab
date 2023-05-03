@@ -2,26 +2,69 @@
 <html lang="ko">
 <meta charset="UTF-8">
 
-<link rel="stylesheet" href="main.css">
-<link rel="stylesheet" href="chat_style.css">
-
-<script src="blockly/blockly_compressed.js"></script>
-<script src="blockly/blocks_compressed.js"></script>
-<script src="blockly/msg/ko.js"></script>
-
-<script src="main.js"></script>
+<link rel="stylesheet" href="login/login.css">
+<script src="login/login.js"></script>
 
 <body>
+<style>
+    body {
 
-<div id="overlay">
-    <div id="login-box">
-        <h2 id="auth-title">로그인을 해주세요.</h2>
-        <input type="text" id="id-input" placeholder="아이디">
-        <input type="text" id="pw-input" placeholder="비밀번호">
-        <div class="button-container">
-            <button id="join-button">회원가입</button>
-            <button id="login-button">로그인</button>
-        </div>
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #ffffff;
+    }
+
+    #logo {
+        width: 500px;
+        height: 250px;
+        margin-top: -150px;
+    }
+
+    #auth-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 130px;
+        margin: 0 10px;
+    }
+
+</style>
+
+
+<div id="auth-box">
+    <img id="logo" src="logo.png" alt="로고 이미지">
+    <input type="text" id="id-input" placeholder="아이디">
+    <input type="text" id="pw-input" placeholder="비밀번호">
+    <div class="button-container">
+        <button id="join-button">회원가입</button>
+        <button id="login-button">로그인</button>
     </div>
 </div>
 
@@ -29,122 +72,17 @@
     <span id="toastMessage"></span>
 </div>
 
-
-<script>
-
-</script>
-
-<div id="blocklyDiv" style="height: 700px; width: 1500px;"></div>
-<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-    <category name="시작" colour="#5ba55b">
-        <block type="start"></block>
-    </category>
-    <category name="이미지 인식" colour="#5b67a5">
-        <block type="learning_image_ai"></block>
-        <block type="classify_by_trained_model_image"></block>
-        <block type="turn_on_the_video"></block>
-        <block type="when_detecting_image"></block>
-        <block type="classification_result_image"></block>
-        <block type="of_confidence_image"></block>
-        <block type="class_learned_image"></block>
-    </category>
-    <category name="음성 인식" colour="#995ba5">
-        <block type="learning_voice_ai"></block>
-        <block type="classify_by_trained_model_voice"></block>
-        <block type="turn_on_the_voice"></block>
-        <block type="when_detecting_voice"></block>
-        <block type="classification_result_voice"></block>
-        <block type="of_confidence_voice"></block>
-        <block type="class_learned_voice"></block>
-    </category>
-    <category name="텍스트 인식" colour="#5ba58c">
-        <block type="learning_text_ai"></block>
-        <block type="classify_by_trained_model_text"></block>
-        <block type="turn_on_the_text"></block>
-        <block type="when_detecting_text"></block>
-        <block type="classification_result_text"></block>
-        <block type="of_confidence_text"></block>
-        <block type="class_learned_text"></block>
-    </category>
-    <category name="흐름" colour="#9fa55b">
-        <block type="controls_if"></block>
-        <block type="controls_repeat_ext">
-            <value name="TIMES">
-                <shadow type="math_number">
-                    <field name="NUM">10</field>
-                </shadow>
-            </value>
-        </block>
-        <block type="controls_whileUntil">
-            <field name="MODE">WHILE</field>
-        </block>
-    </category>
-    <category name="연산" colour="#a5745b">
-        <block type="math_number">
-            <field name="NUM">0</field>
-        </block>
-        <block type="logic_compare">
-            <field name="OP">EQ</field>
-        </block>
-        <block type="combine_letters"></block>
-    </category>
-    <category name="출력" colour="#a5745b">
-        <block type="print"></block>
-        <block type="show_results_together"></block>
-        <block type="show_results_in_order"></block>
-    </category>
-</xml>
-
-</div>
-
-<script>
-
-    var workspace = Blockly.inject('blocklyDiv',
-        { toolbox: document.getElementById('toolbox') });
-
-</script>
-
-<div id="chat-container">
-    <button id="invite-button">초대 링크 보기</button>
-    <div class="container">
-        <div class="chat-window">
-            <div class="chat-content"></div>
-        </div>
-        <div class="chat-controls">
-            <input class="chat-input" type="text">
-            <button class="send-button">전송</button>
-        </div>
-    </div>
-</div>
-
-
-
 <script>
     const joinButton = document.getElementById('join-button');
-    const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
     let isSignUp = false;
-    let invitationLink;
-
-    function getInvitationFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('invitation');
-    }
-
-    // 페이지가 로드될 때 invitation 파라미터 값을 확인하고, 있으면 저장하기
-    const invitationParam = getInvitationFromURL();
-    if (invitationParam) {
-        invitationLink = `${window.location.origin}/?invitation=${invitationParam}`;
-    }
 
     joinButton.addEventListener('click', () => {
         isSignUp = !isSignUp;
         if (isSignUp) {
-            authTitle.textContent = '회원가입을 해주세요.';
             loginButton.textContent = '회원가입 완료';
             joinButton.textContent = '로그인 화면';
         } else {
-            authTitle.textContent = '로그인을 해주세요.';
             loginButton.textContent = '로그인';
             joinButton.textContent = '회원가입';
         }
@@ -152,6 +90,7 @@
 
     loginButton.addEventListener('click', () => {
         if (isSignUp) {
+            showToast("회원가입 시도 성공!", 1000);
             // 회원가입 처리 코드를 여기에 작성하세요.
             var userId = document.getElementById("id-input").value;
             var password = document.getElementById("pw-input").value;
@@ -160,15 +99,11 @@
                 .then(function(response) {
                     if (response.ok) {
                         // 회원가입 성공
-                        console.log("회원가입 성공");
-
-                        document.getElementById('overlay').style.display = 'none';
-
-                        showToast("회원가입 성공!", 2000);
+                        showToast("회원가입 성공!", 1000);
 
                     } else {
                         // 회원가입 실패
-                        console.log("회원가입 실패");
+                        showToast("중복된 아이디로 인해 회원가입에 실패하였습니다.", 2000);
                     }
                 });
         } else {
@@ -181,47 +116,25 @@
                     if (response.ok) {
                         // 로그인 성공
                         console.log("로그인 성공");
-                        // 처리 완료 후 창을 닫습니다.
-                        document.getElementById('overlay').style.display = 'none';
 
                         showToast("로그인 성공!", 1000);
 
                         // UUID를 받아 초대 링크 생성
                         const responseBody = await response.json();
                         const uuid = responseBody.invitationLink;
-                        // index.html-> main.html로 리다이렉션하는 경우 isRedirection 파라메타를 추가함
-                        invitationLink = `${window.location.origin}/main.html?invitation=${uuid}&isRedirection=true`
 
-                        // URL에 invitation 파라미터가 있는 경우 사용자의 user_Invitation_link를 업데이트합니다.
-                        if (invitationParam) {
-                            const updateResponse = await updateUserInvitationLink(userId, window.location.href);
-                            if (updateResponse.ok) {
-                                console.log("User invitation link updated successfully.");
-                            } else {
-                                console.error("Failed to update user invitation link.");
-                            }
-                        } else {
-                            window.location.href = invitationLink;
-                        }
+                        // index.html-> main.html로 리다이렉션하는 경우 isRedirection 파라메타를 추가함
+                        window.location.href = `${window.location.origin}/main.html?invitation=${uuid}&isRedirection=true`
+
 
                     } else {
                         // 로그인 실패
-                        console.log("로그인 실패");
+                        showToast("아이디와 비밀번호를 다시 확인해주십시오", 2000);
                     }
                 });
         }
 
     });
-
-    // 초대 링크 보기 버튼
-    document.getElementById('invite-button').addEventListener('click', () => {
-        if (invitationLink) {
-            alert(`초대 링크: ${invitationLink}`);
-        } else {
-            alert('로그인 후 초대 링크를 생성할 수 있습니다.');
-        }
-    });
-
 
 
 </script>

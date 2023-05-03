@@ -3,8 +3,8 @@
 <mapper namespace="com.example.ai_block_lab.mapper.UserMapper">
 
   <insert id="insertUser" parameterType="com.example.ai_block_lab.model.User">
-    INSERT INTO `User` (userId, User_Invitation_link, `password`)
-    VALUES (#{userId}, #{User_Invitation_link}, #{password})
+    INSERT INTO `User` (userId, user_Invitation_link, `password`)
+    VALUES (#{userId}, #{user_Invitation_link}, #{password})
   </insert>
 
   <select id="findByUserIdAndPassword" resultType="com.example.ai_block_lab.model.User">

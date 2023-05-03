@@ -43,16 +43,3 @@ function showToast(message, duration) {
     }, duration);
 }
 
-
-async function updateUserInvitationLink(userId, invitationLink) {
-    const response = await fetch('/api/update-invitation-link', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId, invitationLink })
-    });
-
-    return response;
-}
-
