@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns="http://www.w3.org/1999/html">
 <meta charset="UTF-8">
 
 <link rel="stylesheet" href="main.css">
-<link rel="stylesheet" href="chat_style.css">
 <script src="main.js"></script>
 
 <!-- Blockly라이브러리 사용을 위해 추가 -->
@@ -40,68 +39,96 @@
     <span id="toastMessage"></span>
 </div>
 
+<div class="container">
+        <div id="blocklyDiv" class="blocklyDivWrapper" ></div>
+    <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+        <category name="시작" colour="#5ba55b">
+            <block type="start"></block>
+        </category>
+        <category name="이미지 인식" colour="#5b67a5">
+            <block type="learning_image_ai"></block>
+            <block type="classify_by_trained_model_image"></block>
+            <block type="turn_on_the_video"></block>
+            <block type="when_detecting_image"></block>
+            <block type="classification_result_image"></block>
+            <block type="of_confidence_image"></block>
+            <block type="class_learned_image"></block>
+        </category>
+        <category name="음성 인식" colour="#995ba5">
+            <block type="learning_voice_ai"></block>
+            <block type="classify_by_trained_model_voice"></block>
+            <block type="turn_on_the_voice"></block>
+            <block type="when_detecting_voice"></block>
+            <block type="classification_result_voice"></block>
+            <block type="of_confidence_voice"></block>
+            <block type="class_learned_voice"></block>
+        </category>
+        <category name="텍스트 인식" colour="#5ba58c">
+            <block type="learning_text_ai"></block>
+            <block type="classify_by_trained_model_text"></block>
+            <block type="turn_on_the_text"></block>
+            <block type="when_detecting_text"></block>
+            <block type="classification_result_text"></block>
+            <block type="of_confidence_text"></block>
+            <block type="class_learned_text"></block>
+        </category>
+        <category name="흐름" colour="#9fa55b">
+            <block type="controls_if"></block>
+            <block type="controls_repeat_ext">
+                <value name="TIMES">
+                    <shadow type="math_number">
+                        <field name="NUM">10</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="controls_whileUntil">
+                <field name="MODE">WHILE</field>
+            </block>
+        </category>
+        <category name="연산" colour="#a5745b">
+            <block type="math_number">
+                <field name="NUM">0</field>
+            </block>
+            <block type="logic_compare">
+                <field name="OP">EQ</field>
+            </block>
+            <block type="combine_letters"></block>
+        </category>
+        <category name="출력" colour="#a5745b">
+            <block type="print"></block>
+            <block type="show_results_together"></block>
+            <block type="show_results_in_order"></block>
+        </category>
+    </xml>
 
-<div id="blocklyDiv" style="height: 700px; width: 1500px;"></div>
-<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-    <category name="시작" colour="#5ba55b">
-        <block type="start"></block>
-    </category>
-    <category name="이미지 인식" colour="#5b67a5">
-        <block type="learning_image_ai"></block>
-        <block type="classify_by_trained_model_image"></block>
-        <block type="turn_on_the_video"></block>
-        <block type="when_detecting_image"></block>
-        <block type="classification_result_image"></block>
-        <block type="of_confidence_image"></block>
-        <block type="class_learned_image"></block>
-    </category>
-    <category name="음성 인식" colour="#995ba5">
-        <block type="learning_voice_ai"></block>
-        <block type="classify_by_trained_model_voice"></block>
-        <block type="turn_on_the_voice"></block>
-        <block type="when_detecting_voice"></block>
-        <block type="classification_result_voice"></block>
-        <block type="of_confidence_voice"></block>
-        <block type="class_learned_voice"></block>
-    </category>
-    <category name="텍스트 인식" colour="#5ba58c">
-        <block type="learning_text_ai"></block>
-        <block type="classify_by_trained_model_text"></block>
-        <block type="turn_on_the_text"></block>
-        <block type="when_detecting_text"></block>
-        <block type="classification_result_text"></block>
-        <block type="of_confidence_text"></block>
-        <block type="class_learned_text"></block>
-    </category>
-    <category name="흐름" colour="#9fa55b">
-        <block type="controls_if"></block>
-        <block type="controls_repeat_ext">
-            <value name="TIMES">
-                <shadow type="math_number">
-                    <field name="NUM">10</field>
-                </shadow>
-            </value>
-        </block>
-        <block type="controls_whileUntil">
-            <field name="MODE">WHILE</field>
-        </block>
-    </category>
-    <category name="연산" colour="#a5745b">
-        <block type="math_number">
-            <field name="NUM">0</field>
-        </block>
-        <block type="logic_compare">
-            <field name="OP">EQ</field>
-        </block>
-        <block type="combine_letters"></block>
-    </category>
-    <category name="출력" colour="#a5745b">
-        <block type="print"></block>
-        <block type="show_results_together"></block>
-        <block type="show_results_in_order"></block>
-    </category>
-</xml>
+        <div class="chat_wrap">
+            <div class="header">
+                <button id="invite-button">초대 링크 보기</button>
+            </div>
+            <div class="chat">
+                <ul>
+                    <!-- 동적 생성 -->
+                </ul>
+            </div>
+            <div class="input-div">
+                <textarea placeholder="Press Enter for send message."></textarea>
+            </div>
 
+            <!-- format -->
+
+            <div class="chat format">
+                <ul>
+                    <li>
+                        <div class="sender">
+                            <span></span>
+                        </div>
+                        <div class="message">
+                            <span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 </div>
 
 <script>
@@ -110,20 +137,6 @@
         { toolbox: document.getElementById('toolbox') });
 
 </script>
-
-
-<div id="chat-container">
-    <button id="invite-button">초대 링크 보기</button>
-    <div class="container">
-        <div class="chat-window">
-            <div class="chat-content" id="chat-content"></div>
-        </div>
-        <div class="chat-controls">
-            <input class="chat-input" type="text">
-            <button class="send-button">전송</button>
-        </div>
-    </div>
-</div>
 
 
 <script>
@@ -195,16 +208,16 @@
 
                         showToast("로그인 성공!", 1000);
 
-                            const updateResponse = await updateUserInvitationLink(userId, invitationParam );
+                        const updateResponse = await updateUserInvitationLink(userId, invitationParam );
 
                         if (updateResponse.ok) {
-                                console.log("User invitation link updated successfully.");
-                                connect(userId, invitationParam);
+                            console.log("User invitation link updated successfully.");
+                            connect(userId, invitationParam);
 
-                                showToast("커넥션 시도", 2000);
-                            } else {
-                                console.error("Failed to update user invitation link.");
-                            }
+                            showToast("커넥션 시도", 2000);
+                        } else {
+                            console.error("Failed to update user invitation link.");
+                        }
                     } else {
                         // 로그인 실패
                         showToast("아이디와 비밀번호를 다시 확인해주십시오", 2000);
@@ -218,7 +231,7 @@
     document.getElementById('invite-button').addEventListener('click', () => {
         Swal.fire({
             title: '초대 링크',
-            text: urlParams,
+            text: window.location.href,
             confirmButtonText: '확인'
         });
     });
