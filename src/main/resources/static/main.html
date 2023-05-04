@@ -139,12 +139,16 @@
     }
 
     const isRedirection = getIsRedirectionFromURL();
-    let urlParams;
-    let invitationParam;
+    let urlParams = new URLSearchParams(window.location.search);
+    let invitationParam = urlParams.get('invitation');
 
-    //URL에 isRedirection이 있으면 로그인창을 띄우지 않음
+
+    //URL에 isRedirection이 있으면 웹소켓에 연결만 하고 로그인창을 띄우지 않음
     if(isRedirection){
         document.getElementById('overlay').style.display = 'none';
+        // 로그인된 사용자의 userId 가져오기
+        const userId = localStorage.getItem("userId");
+        connect(userId, invitationParam);
     }
 
     let cleanInvitationLink = window.location.href.replace('&isRedirection=true', '');
@@ -196,10 +200,6 @@
                         document.getElementById('overlay').style.display = 'none';
 
                         showToast("로그인 성공!", 1000);
-
-
-                         urlParams = new URLSearchParams(window.location.search);
-                         invitationParam = urlParams.get('invitation');
 
                             const updateResponse = await updateUserInvitationLink(userId, invitationParam );
 

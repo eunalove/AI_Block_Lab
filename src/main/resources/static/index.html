@@ -3,6 +3,7 @@
 <meta charset="UTF-8">
 
 <link rel="stylesheet" href="login/login.css">
+
 <script src="login/login.js"></script>
 
 <body>
@@ -122,6 +123,8 @@
                         const responseBody = await response.json();
                         const uuid = responseBody.invitationLink;
 
+                        // 로컬 저장소에 사용자 ID 저장
+                        localStorage.setItem("userId", userId);
                         // index.html-> main.html로 리다이렉션하는 경우 isRedirection 파라메타를 추가함
                         window.location.href = `${window.location.origin}/main.html?invitation=${uuid}&isRedirection=true`
 
