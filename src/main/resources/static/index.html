@@ -125,8 +125,9 @@
 
                         // 로컬 저장소에 사용자 ID 저장
                         localStorage.setItem("userId", userId);
+                        localStorage.setItem("isRedirection", true);
                         // index.html-> main.html로 리다이렉션하는 경우 isRedirection 파라메타를 추가함
-                        window.location.href = `${window.location.origin}/main.html?invitation=${uuid}&isRedirection=true`
+                        window.location.href = `${window.location.origin}/main.html?invitation=${uuid}`
 
 
                     } else {

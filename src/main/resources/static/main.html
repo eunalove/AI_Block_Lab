@@ -132,26 +132,20 @@
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
     let isSignUp = false;
-
-    function getIsRedirectionFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('isRedirection') === 'true';
-    }
-
-    const isRedirection = getIsRedirectionFromURL();
+    let userId
     let urlParams = new URLSearchParams(window.location.search);
     let invitationParam = urlParams.get('invitation');
 
-
+    const isRedirection = localStorage.getItem("isRedirection");
     //URL에 isRedirection이 있으면 웹소켓에 연결만 하고 로그인창을 띄우지 않음
     if(isRedirection){
         document.getElementById('overlay').style.display = 'none';
         // 로그인된 사용자의 userId 가져오기
         const userId = localStorage.getItem("userId");
         connect(userId, invitationParam);
+        // 이제 isRedirection 값을 로컬 스토리지에서 삭제합니다.
+        localStorage.removeItem("isRedirection");
     }
-
-    let cleanInvitationLink = window.location.href.replace('&isRedirection=true', '');
 
     joinButton.addEventListener('click', () => {
         isSignUp = !isSignUp;
@@ -224,7 +218,7 @@
     document.getElementById('invite-button').addEventListener('click', () => {
         Swal.fire({
             title: '초대 링크',
-            text: cleanInvitationLink,
+            text: urlParams,
             confirmButtonText: '확인'
         });
     });
