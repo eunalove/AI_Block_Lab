@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="chat_style.css">
 <script src="main.js"></script>
 
-
+<!-- Blockly라이브러리 사용을 위해 추가 -->
 <script src="blockly/blockly_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/ko.js"></script>
@@ -14,6 +14,12 @@
 
 <!-- alert() 함수를 꾸미기 위해 추가한 스위트알럿 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- websocket 통신을 위해 추가-->
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+<script src="collaborate.js"></script>
 
 <body>
 
@@ -105,11 +111,12 @@
 
 </script>
 
+
 <div id="chat-container">
     <button id="invite-button">초대 링크 보기</button>
     <div class="container">
         <div class="chat-window">
-            <div class="chat-content"></div>
+            <div class="chat-content" id="chat-content"></div>
         </div>
         <div class="chat-controls">
             <input class="chat-input" type="text">
@@ -119,8 +126,8 @@
 </div>
 
 
-
 <script>
+
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
@@ -180,7 +187,7 @@
             // 로그인 처리 코드를 여기에 작성하세요.
             var userId = document.getElementById("id-input").value;
             var password = document.getElementById("pw-input").value;
-
+            showToast("로그인시도 성공!", 1000);
             login(userId, password)
                 .then(async function(response) {
                     if (response.ok) {
@@ -194,15 +201,19 @@
                          urlParams = new URLSearchParams(window.location.search);
                          invitationParam = urlParams.get('invitation');
 
-                            const updateResponse = await updateUserInvitationLink(userId,invitationParam );
-                            if (updateResponse.ok) {
+                            const updateResponse = await updateUserInvitationLink(userId, invitationParam );
+
+                        if (updateResponse.ok) {
                                 console.log("User invitation link updated successfully.");
+                                connect(userId, invitationParam);
+
+                                showToast("커넥션 시도", 2000);
                             } else {
                                 console.error("Failed to update user invitation link.");
                             }
                     } else {
                         // 로그인 실패
-                        console.log("로그인 실패");
+                        showToast("아이디와 비밀번호를 다시 확인해주십시오", 2000);
                     }
                 });
         }

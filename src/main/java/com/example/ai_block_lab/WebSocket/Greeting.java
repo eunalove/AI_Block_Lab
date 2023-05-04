@@ -1,4 +1,4 @@
-package com.example.ai_block_lab.WebSocketTest;
+package com.example.ai_block_lab.WebSocket;
 
 public class Greeting {
 

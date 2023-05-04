@@ -92,3 +92,7 @@ h2 {
     opacity: 1;
 }
 
+.user-joined {
+    font-weight: bold;
+    color: #4CAF50;
+}
