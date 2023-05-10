@@ -1,13 +1,13 @@
 package com.example.ai_block_lab.WebSocket;
 
-public class Greeting {
+public class ReceiveChat {
 
     private String senderName;
     private String message;
-    public Greeting() {
+    public ReceiveChat() {
     }
 
-    public Greeting(String senderName, String message) {
+    public ReceiveChat(String senderName, String message) {
         this.senderName = senderName;
         this.message = message;
     }

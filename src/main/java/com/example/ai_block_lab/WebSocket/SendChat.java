@@ -1,16 +1,16 @@
 package com.example.ai_block_lab.WebSocket;
 
-public class HelloMessage {
+public class SendChat {
 
     private String name;
     private String userInvitationLink;
 
     private String message;
 
-    public HelloMessage() {
+    public SendChat() {
     }
 
-    public HelloMessage(String name, String userInvitationLink, String message) {
+    public SendChat(String name, String userInvitationLink, String message) {
         this.name = name;
         this.userInvitationLink = userInvitationLink;
         this.message = message;

@@ -9,9 +9,9 @@ function connect(userId, userInvitationLink) {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         sendGreeting(userId, userInvitationLink);
-        stompClient.subscribe('/topic/greetings/' + userInvitationLink, function (greeting) {
+        stompClient.subscribe('/topic/receiveChat/' + userInvitationLink, function (receiveMsg) {
             console.log('showGreeting:');
-            const receivedMessage = JSON.parse(greeting.body);
+            const receivedMessage = JSON.parse(receiveMsg.body);
             addMessageToChat(receivedMessage.senderName , receivedMessage.message, receivedMessage.senderName  === chat_userId);
 
         });
@@ -21,7 +21,7 @@ function connect(userId, userInvitationLink) {
 
 function sendGreeting(userId, message) {
     console.log('sendGreeting: ' + message);
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': userId, 'userInvitationLink': message}));
+    stompClient.send("/app/sendChat", {}, JSON.stringify({'name': userId, 'userInvitationLink': message}));
 }
 
 function addMessageToChat(senderName, message, isMyMessage) {
@@ -89,7 +89,7 @@ const Chat = (function () {
             "message": message
         };
 
-        stompClient.send("/app/hello", {}, JSON.stringify(data));
+        stompClient.send("/app/sendChat", {}, JSON.stringify(data));
     }
 
     function clearTextarea() {
