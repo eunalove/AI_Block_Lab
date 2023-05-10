@@ -1,16 +1,19 @@
 package com.example.ai_block_lab.WebSocket;
 
-public class HelloMessage {
+public class SendChat {
 
     private String name;
     private String userInvitationLink;
 
-    public HelloMessage() {
+    private String message;
+
+    public SendChat() {
     }
 
-    public HelloMessage(String name, String userInvitationLink) {
+    public SendChat(String name, String userInvitationLink, String message) {
         this.name = name;
         this.userInvitationLink = userInvitationLink;
+        this.message = message;
     }
 
     public String getName() {
@@ -27,5 +30,13 @@ public class HelloMessage {
 
     public void setUserInvitationLink(String userInvitationLink) {
         this.userInvitationLink = userInvitationLink;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
