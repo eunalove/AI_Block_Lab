@@ -6,6 +6,10 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html, body {
+    overflow: hidden;
+}
+
 #overlay {
     position: fixed;
     top: 0;
