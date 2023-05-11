@@ -16,6 +16,26 @@ function connect(userId, userInvitationLink) {
 
         });
 
+        // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
+        workspace.addChangeListener(function(event) {
+            // 이벤트를 JSON으로 변환합니다.
+            var eventJson = event.toJson();
+
+            // 변환된 JSON을 서버에 전송합니다.
+            console.log("블록을 보냄")
+            stompClient.send("/app/sendBlockEvent", {}, JSON.stringify({'name': userId, 'userInvitationLink': userInvitationLink, 'blockEvent': eventJson}));
+
+        });
+
+        stompClient.subscribe('/topic/receiveBlockEvent/' + userInvitationLink, function (synBlockMsg) {
+            console.log('Received block synchronization message:');
+            const receivedSynBlockMsg = JSON.parse(synBlockMsg.body);
+
+            var event = Blockly.Events.fromJson(receivedSynBlockMsg.event, workspace);
+            event.run(true);
+
+        });
+
     });
 }
 
@@ -23,6 +43,7 @@ function sendGreeting(userId, message) {
     console.log('sendGreeting: ' + message);
     stompClient.send("/app/sendChat", {}, JSON.stringify({'name': userId, 'userInvitationLink': message}));
 }
+
 
 function addMessageToChat(senderName, message, isMyMessage) {
     const LR_className = isMyMessage ? "right" : "left";
