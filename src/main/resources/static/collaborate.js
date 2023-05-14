@@ -16,13 +16,21 @@ function connect(userId, userInvitationLink) {
 
         });
 
-        stompClient.subscribe('/topic/ReceiveCreateBlock/' + userInvitationLink, function (synBlockMsg) {
+        stompClient.subscribe('/topic/receiveCreateBlock/' + userInvitationLink, function (synBlockMsg) {
             console.log('Received block synchronization message:');
-            console.log(synBlockMsg.body);
             const receivedSynBlockMsg = JSON.parse(synBlockMsg.body);
 
-            var event = Blockly.Events.fromJson(receivedSynBlockMsg, workspace);
+            // 만약 userId가 현재 사용자의 userId와 같다면 이 이벤트를 무시합니다.
+            if (receivedSynBlockMsg.userId === userId) {
+                return;
+            }
+
+            // Blockly 이벤트를 비활성화합니다.
+            Blockly.Events.disable();
+            var event = Blockly.Events.fromJson(receivedSynBlockMsg.event, workspace);
             event.run(true);
+            // Blockly 이벤트를 다시 활성화합니다.
+            Blockly.Events.enable();
 
         });
 

@@ -5,72 +5,22 @@ import java.util.Map;
 
 public class SendBlockCreate {
 
-    private String blockId;
-    private String group;
-    private List<String> ids;
-    private Map<String, Object> json;
-    private String type;
-    private String xml;
-
+    private String userId; // 사용자 ID를 추가합니다.
     private String userInvitationLink;
+    private Map<String, Object> event; // 이벤트 데이터를 담는 맵
 
-    public SendBlockCreate(String blockId, String group, List<String> ids, Map<String, Object> json, String type, String xml, String userInvitationLink) {
-        this.blockId = blockId;
-        this.group = group;
-        this.ids = ids;
-        this.json = json;
-        this.type = type;
-        this.xml = xml;
+    public SendBlockCreate(String userId, String userInvitationLink, Map<String, Object> event) {
+        this.userId = userId;
         this.userInvitationLink = userInvitationLink;
+        this.event = event;
     }
 
-
-    public String getType() {
-        return type;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getBlockId() {
-        return blockId;
-    }
-
-    public void setBlockId(String blockId) {
-        this.blockId = blockId;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
-    public List<String> getIds() {
-        return ids;
-    }
-
-    public void setIds(List<String> ids) {
-        this.ids = ids;
-    }
-
-    public Map<String, Object> getJson() {
-        return json;
-    }
-
-    public void setJson(Map<String, Object> json) {
-        this.json = json;
-    }
-
-    public String getXml() {
-        return xml;
-    }
-
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserInvitationLink() {
@@ -79,5 +29,13 @@ public class SendBlockCreate {
 
     public void setUserInvitationLink(String userInvitationLink) {
         this.userInvitationLink = userInvitationLink;
+    }
+
+    public Map<String, Object> getEvent() {
+        return event;
+    }
+
+    public void setEvent(Map<String, Object> event) {
+        this.event = event;
     }
 }
