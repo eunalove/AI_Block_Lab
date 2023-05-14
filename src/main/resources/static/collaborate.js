@@ -16,22 +16,12 @@ function connect(userId, userInvitationLink) {
 
         });
 
-        // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
-        workspace.addChangeListener(function(event) {
-            // 이벤트를 JSON으로 변환합니다.
-            var eventJson = event.toJson();
-
-            // 변환된 JSON을 서버에 전송합니다.
-            console.log("블록을 보냄")
-            stompClient.send("/app/sendBlockEvent", {}, JSON.stringify({'name': userId, 'userInvitationLink': userInvitationLink, 'blockEvent': eventJson}));
-
-        });
-
-        stompClient.subscribe('/topic/receiveBlockEvent/' + userInvitationLink, function (synBlockMsg) {
+        stompClient.subscribe('/topic/ReceiveCreateBlock/' + userInvitationLink, function (synBlockMsg) {
             console.log('Received block synchronization message:');
+            console.log(synBlockMsg.body);
             const receivedSynBlockMsg = JSON.parse(synBlockMsg.body);
 
-            var event = Blockly.Events.fromJson(receivedSynBlockMsg.event, workspace);
+            var event = Blockly.Events.fromJson(receivedSynBlockMsg, workspace);
             event.run(true);
 
         });
@@ -92,7 +82,7 @@ const Chat = (function () {
             if (e.keyCode == 13 && !e.shiftKey) {
                 e.preventDefault();
                 const message = $(this).val();
-            //현재 메시지가 없으면 ~님이 입장하셨습니다를 띄우기 때문에
+                //현재 메시지가 없으면 ~님이 입장하셨습니다를 띄우기 때문에
                 //메시지가 없으면 전송이 안되게 함
                 if(message) {
                     sendMessage(chat_userId, message);

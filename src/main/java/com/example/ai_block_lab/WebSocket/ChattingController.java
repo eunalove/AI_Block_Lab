@@ -15,6 +15,7 @@ public class ChattingController {
     private SimpMessagingTemplate messagingTemplate;
 
 
+
     @MessageMapping("/sendChat")
     public void receiveMsg(SendChat message, Principal principal) throws Exception {
         //Principal 객체는 현재 인증된 사용자의 정보를 나타냄

@@ -449,14 +449,6 @@
 
 <script>
 
-    var workspace = Blockly.inject('blocklyDiv',
-        { toolbox: document.getElementById('toolbox') });
-
-</script>
-
-
-<script>
-
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
@@ -528,6 +520,8 @@
                             console.log("User invitation link updated successfully.");
                             connect(userId, invitationParam);
 
+
+
                         } else {
                             console.error("Failed to update user invitation link.");
                         }
@@ -537,6 +531,26 @@
                     }
                 });
         }
+
+    });
+
+    var workspace = Blockly.inject('blocklyDiv',
+        { toolbox: document.getElementById('toolbox') });
+
+    // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
+    workspace.addChangeListener(function(event) {
+        // 이벤트를 JSON으로 변환합니다.
+        var eventJson = event.toJson();
+
+        if(eventJson.type === "create"){
+            console.log("블록생성 보냄")
+            stompClient.send("/app/sendCreateBlock", {}, JSON.stringify({'blockId': eventJson.blockId, 'group': eventJson.group, 'ids': eventJson.ids,
+                'json': eventJson.json,'type': eventJson.type,'xml': eventJson.xml,'userInvitationLink': invitationParam}));
+
+        }
+        // 변환된 JSON을 서버에 전송합니다.
+       // console.log("블록을 보냄")
+        //stompClient.send("/app/sendBlockEvent", {}, JSON.stringify({'name': userId, 'userInvitationLink': invitationParam, 'blockEvent': eventJson}));
 
     });
 
