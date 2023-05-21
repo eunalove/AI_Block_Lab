@@ -16,24 +16,6 @@ function connect(userId, userInvitationLink) {
 
         });
 
-        stompClient.subscribe('/topic/receiveCreateBlock/' + userInvitationLink, function (synBlockMsg) {
-            console.log('Received block synchronization message:');
-            const receivedSynBlockMsg = JSON.parse(synBlockMsg.body);
-
-            // 만약 userId가 현재 사용자의 userId와 같다면 이 이벤트를 무시합니다.
-            if (receivedSynBlockMsg.userId === userId) {
-                return;
-            }
-
-            // Blockly 이벤트를 비활성화합니다.
-            Blockly.Events.disable();
-            var event = Blockly.Events.fromJson(receivedSynBlockMsg.event, workspace);
-            event.run(true);
-            // Blockly 이벤트를 다시 활성화합니다.
-            Blockly.Events.enable();
-
-        });
-
     });
 }
 
@@ -41,7 +23,6 @@ function sendGreeting(userId, message) {
     console.log('sendGreeting: ' + message);
     stompClient.send("/app/sendChat", {}, JSON.stringify({'name': userId, 'userInvitationLink': message}));
 }
-
 
 function addMessageToChat(senderName, message, isMyMessage) {
     const LR_className = isMyMessage ? "right" : "left";
@@ -90,7 +71,7 @@ const Chat = (function () {
             if (e.keyCode == 13 && !e.shiftKey) {
                 e.preventDefault();
                 const message = $(this).val();
-                //현재 메시지가 없으면 ~님이 입장하셨습니다를 띄우기 때문에
+            //현재 메시지가 없으면 ~님이 입장하셨습니다를 띄우기 때문에
                 //메시지가 없으면 전송이 안되게 함
                 if(message) {
                     sendMessage(chat_userId, message);
