@@ -35,6 +35,7 @@
 
 
 
+
 <div id="toast" class="toast">
     <span id="toastMessage"></span>
 </div>
@@ -164,6 +165,7 @@
             this.appendValueInput("NAME")
                 .setCheck(null)
                 .appendField("감지했을 때");
+            this.setPreviousStatement(true, null);
             this.setNextStatement(true, null);
             this.setColour(230);
             this.setTooltip("");
@@ -176,6 +178,7 @@
             this.appendValueInput("NAME")
                 .setCheck(null)
                 .appendField("감지했을 때");
+            this.setPreviousStatement(true, null);
             this.setNextStatement(true, null);
             this.setColour(285);
             this.setTooltip("");
@@ -188,6 +191,7 @@
             this.appendValueInput("NAME")
                 .setCheck(null)
                 .appendField("감지했을 때");
+            this.setPreviousStatement(true, null);
             this.setColour(180);
             this.setTooltip("");
             this.setHelpUrl("");
@@ -322,6 +326,7 @@
         init: function() {
             this.appendValueInput("NAME")
                 .appendField("출력하기");
+            this.setPreviousStatement(true, null);
             this.setColour(20);
             this.setTooltip('');
             this.setHelpUrl('http://www.example.com/');
@@ -356,7 +361,9 @@
 
 
 <div class="container">
-    <div id="blocklyDiv" class="blocklyDivWrapper" ></div>
+    <div id="blocklyDiv" class="blocklyDivWrapper" >
+        <img src="startButton.png" alt="Your Image" id="startButton">
+    </div>
     <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
         <category name="시작" colour="#5ba55b">
             <block type="start"></block>
@@ -542,17 +549,15 @@
         { toolbox: document.getElementById('toolbox') });
 
 
-
     // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
     workspace.addChangeListener(function(event) {
 
         // 이벤트를 JSON으로 변환합니다.
         var eventJson = event.toJson();
 
-        if(eventJson.type === "create"){
+        if(eventJson.type === "create") {
             console.log("블록생성 보냄")
-            console.log("보내기 직전에 userIdJson:"+userIdJson);
-            stompClient.send("/app/sendCreateBlock", {}, JSON.stringify({
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
                 'userId': userIdJson,
                 'userInvitationLink': invitationParam,
                 'event': {
@@ -565,8 +570,93 @@
                 }
             }));
 
+        }/*else if(eventJson.type === "selected"){
+            console.log("블록선택 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'group': eventJson.group,
+                    'newElementId': eventJson.newElementId,
+                    'oldElementId': eventJson.oldElementId,
+                    'type': eventJson.type
+                }
+            }));
+
+        }*/else if(eventJson.type === "move"){
+            console.log("블록무브 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'blockId': eventJson.blockId,
+                    'group': eventJson.group,
+                    'newCoordinate': eventJson.newCoordinate,
+                    'newInputName': eventJson.newInputName,
+                    'newParentId': eventJson.newParentId,
+                    'oldCoordinate': eventJson.oldCoordinate,
+                    'oldInputName': eventJson.oldInputName,
+                    'oldParentId': eventJson.oldParentId,
+                    'type': eventJson.type
+                }
+            }));
+
+
+        }else if(eventJson.type === "delete"){
+            console.log("블록삭제 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'blockId': eventJson.blockId,
+                    'group': eventJson.group,
+                    'ids': eventJson.ids,
+                    'oldJson': eventJson.oldJson,
+                    'oldXml': eventJson.oldXml,
+                    'type': eventJson.type,
+                    'wasShadow': eventJson.wasShadow
+                }
+            }));
+
+        }else if(eventJson.type === "drag"){
+            console.log("블록드래그 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'blockId': eventJson.blockId,
+                    'group': eventJson.group,
+                    'isStart': eventJson.isStart,
+                    'type': eventJson.type
+                }
+            }));
+
         }
     });
+
+    document.getElementById('startButton').addEventListener('click', function() {
+        var workspace = Blockly.getMainWorkspace();
+        var topBlocks = workspace.getTopBlocks(true);
+        var blockNames = "";
+
+        topBlocks.forEach(function(topBlock) {
+            if (topBlock.type === 'start') {
+                var childBlocks = topBlock.getDescendants(true);
+                childBlocks.forEach(function(childBlock) {
+                    blockNames += childBlock.type + "\n"; // 블록 이름을 변수에 추가합니다.
+
+                });
+            }
+        });
+
+        Swal.fire({
+            text: blockNames,
+            confirmButtonText: '확인'
+        });
+
+    });
+
+
 
     // 초대 링크 보기 버튼
     document.getElementById('invite-button').addEventListener('click', () => {

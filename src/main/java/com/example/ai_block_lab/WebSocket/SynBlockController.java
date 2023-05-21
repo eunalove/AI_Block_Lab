@@ -18,28 +18,37 @@ public class SynBlockController {
     private BlockLockManager blockLockManager;
 
 
-    @MessageMapping("/sendCreateBlock")
-    public void CreateBlock(SendBlockCreate message) throws InterruptedException {
+    @MessageMapping("/sendBlock")
+    public void receiveBlockMsg(SendBlock message) throws InterruptedException {
+        // 블록 별로 잠금을 처리하기 위해 ReentrantLock을 가져옵니다.
         String userInvitationLink = message.getUserInvitationLink();
-        String destination = "/topic/receiveCreateBlock/" + userInvitationLink;
-        System.out.println("블록 생성 구독 전송 직전");
-        messagingTemplate.convertAndSend(destination, new ReceiveBlockCreate(message.getUserId(), message.getEvent()));
+        String destination = "/topic/receiveBlock/" + userInvitationLink;
+        messagingTemplate.convertAndSend(destination, new ReceiveBlock(message.getUserId(), message.getEvent()));
 
-    }
-    @MessageMapping("/sendBlockEvent")
-    public void receiveMsg(BlockEventMessage message){
+/*
+
+
+        ReentrantLock lock = blockLockManager.getLock(message.getEvent().get("blockId").toString());
+        System.out.println("message.type = " + message.getEvent().get("type"));
+        System.out.println("lock = " + lock);
         String userInvitationLink = message.getUserInvitationLink();
-        String destination = "/topic/receiveBlockEvent/" + userInvitationLink;
-        System.out.println("destination = " + destination);
-        System.out.println("블록 구독 전송 직전");
+        String destination = "/topic/receiveBlock/" + userInvitationLink;
 
-        System.out.println("message.getEvent() = " + message.getBlockEvent());
-
-        //같은 초대 링크를 가진 사용자들이 구독하는 대상
-        messagingTemplate.convertAndSend(destination,  new BlockEventMessage(message.getUserId(), message.getUserInvitationLink(), message.getBlockEvent(), message.getEventId()));
-
-        // 메시지를 전달받은 대상에 전송하는 메서드입니다.
-        // 여기서 destination은 메시지를 전송할 대상이며, payload는 전송할 메시지 객체
-        System.out.println("블록 구독 전송 직후");
+    // 블록에 대한 잠금을 시도합니다.
+    if (lock.tryLock()) {
+        try {
+            // 잠금이 성공하면 이벤트를 처리하고 메시지를 전송합니다.
+            messagingTemplate.convertAndSend(destination, new ReceiveBlock(message.getUserId(), message.getEvent()));
+        } finally {
+            // 잠금을 해제합니다.
+            lock.unlock();
+        }
+    } else {
+        // 잠금이 실패하면 (다른 사용자가 이미 블록을 수정 중이면) 이벤트를 무시합니다.
+        System.out.println("블록 " + message.getEvent().get("blockId").toString() + " is currently being modified by another user.");
     }
+*/
+
+    System.out.println("블록 생성 구독 전송 직후");
+}
 }

@@ -16,7 +16,7 @@ function connect(userId, userInvitationLink) {
 
         });
 
-        stompClient.subscribe('/topic/receiveCreateBlock/' + userInvitationLink, function (synBlockMsg) {
+        stompClient.subscribe('/topic/receiveBlock/' + userInvitationLink, function (synBlockMsg) {
             console.log('Received block synchronization message:');
             const receivedSynBlockMsg = JSON.parse(synBlockMsg.body);
 
