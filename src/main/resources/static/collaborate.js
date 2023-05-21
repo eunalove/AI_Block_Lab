@@ -1,6 +1,7 @@
 var stompClient = null;
 var chat_userId = null;
 
+
 function connect(userId, userInvitationLink) {
     chat_userId = userId;
     Chat.setUserInvitationLink(userInvitationLink);
