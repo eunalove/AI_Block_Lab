@@ -111,6 +111,20 @@
         }
     };
 
+    Blockly.Blocks['url_image_receive'] = {
+        init: function() {
+            this.appendValueInput("url_image")
+                .setCheck(null)
+                .appendField("이미지 분류 모델 URL 입력");
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(230);
+            this.setTooltip("");
+            this.setHelpUrl("");
+        }
+    };
+
+
     Blockly.Blocks['classify_by_trained_model_image'] = {
         init: function() {
             this.appendDummyInput()
@@ -381,8 +395,9 @@
         </category>
         <category name="이미지 인식" colour="#5b67a5">
             <block type="learning_image_ai"></block>
-            <block type="classify_by_trained_model_image"></block>
             <block type="turn_on_the_video"></block>
+            <block type="url_image_receive"></block>
+            <block type="classify_by_trained_model_image"></block>
             <block type="when_detecting_image"></block>
             <block type="classification_result_image"></block>
             <block type="of_confidence_image"></block>
@@ -422,6 +437,9 @@
         <category name="연산" colour="#a5745b">
             <block type="math_number">
                 <field name="NUM">0</field>
+            </block>
+            <block type="text">
+                <field name="TEXT"></field>
             </block>
             <block type="logic_compare">
                 <field name="OP">EQ</field>
