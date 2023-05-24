@@ -14,10 +14,6 @@ public class SynBlockController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    private BlockLockManager blockLockManager;
-
-
     @MessageMapping("/sendBlock")
     public void receiveBlockMsg(SendBlock message) throws InterruptedException {
         // 블록 별로 잠금을 처리하기 위해 ReentrantLock을 가져옵니다.

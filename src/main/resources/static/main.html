@@ -8,6 +8,7 @@
 <!-- Blockly라이브러리 사용을 위해 추가 -->
 <script src="blockly/blockly_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
+<script src="blockly/javascript_compressed.js"></script>
 <script src="blockly/msg/ko.js"></script>
 
 
@@ -25,7 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
 <script type="text/javascript"></script>
 
-<script src="teachableMachine.js"></script>
+<script src="blockEvent.js"></script>
 
 <body>
 <div id="overlay">
@@ -64,9 +65,11 @@
             this.setColour(135);
             this.setTooltip("");
             this.setHelpUrl("");
+        },
+
+        play: function() {
+            console.log("start");
         }
-
-
     };
 
     Blockly.Blocks['learning_image_ai'] = {
@@ -669,16 +672,21 @@
         }
     });
 
-
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
-        var blockNames = "";
 
-        window.location.href = 'AI.html';
-
+        topBlocks.forEach(function(block) {
+            if(block.type === 'start') {
+                var code = Blockly.JavaScript.blockToCode(block);
+                try {
+                    eval(code);
+                } catch(e) {
+                    alert(e);
+                }
+            }
+        });
     });
-
 
     // 초대 링크 보기 버튼
     document.getElementById('invite-button').addEventListener('click', () => {
@@ -688,6 +696,7 @@
             confirmButtonText: '확인'
         });
     });
+
 
 
 
