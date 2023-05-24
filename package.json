@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "blockly": "^9.3.2"
+    "@tensorflow/tfjs": "^1.7.4",
+    "blockly": "^9.3.2",
+    "ml5": "^0.12.2"
   }
 }
