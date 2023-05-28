@@ -1,7 +1,7 @@
 
 Blockly.JavaScript['start'] = function(block) {
     console.log("start");
-    return 'start();\n';
+    return '\n';
 };
 
 Blockly.JavaScript['learning_image_ai'] = function(block) {
@@ -139,7 +139,6 @@ Blockly.JavaScript['combine_letters'] = function(block) {
 Blockly.JavaScript['print'] = function(block) {
     // 로직을 여기에 작성하세요.
     var text = Blockly.JavaScript.valueToCode(block, 'text', Blockly.JavaScript.ORDER_NONE) || '""';
-    // var text = block.getFieldValue('TEXT');
     console.log(text);
     return 'print();\n';
 };

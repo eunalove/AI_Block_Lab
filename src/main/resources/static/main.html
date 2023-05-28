@@ -43,8 +43,6 @@
 </div>
 
 
-
-
 <div id="toast" class="toast">
     <span id="toastMessage"></span>
 </div>
@@ -66,10 +64,6 @@
             this.setColour(135);
             this.setTooltip("");
             this.setHelpUrl("");
-        },
-
-        play: function() {
-            console.log("start");
         }
     };
 
@@ -398,6 +392,7 @@
             <block type="start"></block>
         </category>
         <category name="이미지 인식" colour="#5b67a5">
+
             <block type="learning_image_ai"></block>
             <block type="turn_on_the_video"></block>
             <block type="url_image_receive"></block>
@@ -454,6 +449,26 @@
             <block type="print"></block>
             <block type="show_results_together"></block>
             <block type="show_results_in_order"></block>
+            <block type="controls_flow_statements" disabled="true">
+                <field name="FLOW">BREAK</field>
+            </block>
+            <block type="math_random_float"></block>
+            <block type="text_print">
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="text_prompt_ext">
+                <mutation type="TEXT"></mutation>
+                <field name="TYPE">TEXT</field>
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
         </category>
     </xml>
 
@@ -494,8 +509,8 @@
 
 
 <script>
-
     document.getElementById('overlay').style.display = 'none';
+
 /*
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
@@ -682,7 +697,7 @@
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
 
-     topBlocks.forEach(function(block) {
+        topBlocks.forEach(function(block) {
             if(block.type === 'start') {
                 var code = Blockly.JavaScript.blockToCode(block);
                 try {
