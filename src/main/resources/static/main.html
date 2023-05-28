@@ -29,6 +29,7 @@
 <script src="blockEvent.js"></script>
 
 <body>
+
 <div id="overlay">
     <div id="login-box">
         <h2 id="auth-title">로그인을 해주세요.</h2>
@@ -352,7 +353,7 @@
 
     Blockly.Blocks['print'] = {
         init: function() {
-            this.appendValueInput("NAME")
+            this.appendValueInput("text")
                 .appendField("출력하기");
             this.setPreviousStatement(true, null);
             this.setColour(20);
@@ -494,6 +495,8 @@
 
 <script>
 
+    document.getElementById('overlay').style.display = 'none';
+/*
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
@@ -581,12 +584,14 @@
                 });
         }
 
-    });
+    });*/
 
     var workspace = Blockly.inject('blocklyDiv',
         { toolbox: document.getElementById('toolbox') });
 
+    Blockly.JavaScript.init(workspace);
 
+/*
     // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
     workspace.addChangeListener(function(event) {
 
@@ -608,7 +613,7 @@
                 }
             }));
 
-        }/*else if(eventJson.type === "selected"){
+        }/!*else if(eventJson.type === "selected"){
             console.log("블록선택 보냄")
             stompClient.send("/app/sendBlock", {}, JSON.stringify({
                 'userId': userIdJson,
@@ -621,7 +626,7 @@
                 }
             }));
 
-        }*/else if(eventJson.type === "move"){
+        }*!/else if(eventJson.type === "move"){
             console.log("블록무브 보냄")
             stompClient.send("/app/sendBlock", {}, JSON.stringify({
                 'userId': userIdJson,
@@ -671,12 +676,13 @@
 
         }
     });
+*/
 
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
 
-        topBlocks.forEach(function(block) {
+     topBlocks.forEach(function(block) {
             if(block.type === 'start') {
                 var code = Blockly.JavaScript.blockToCode(block);
                 try {
@@ -686,6 +692,11 @@
                 }
             }
         });
+
+
+
+
+
     });
 
     // 초대 링크 보기 버튼
