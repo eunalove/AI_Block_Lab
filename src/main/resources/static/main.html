@@ -283,7 +283,7 @@
             var input = this.appendDummyInput()
                 .appendField('이미지 분류결과')
                 .appendField(new Blockly.FieldDropdown(
-                    this.generateOptions), 'DAY');
+                    this.generateOptions), 'Lable');
             this.setInputsInline(true);
             this.setOutput(true, null);
             this.setColour(230);
@@ -292,13 +292,13 @@
         generateOptions: function() {
             var options = [];
             if(maxPredictions){
+                options.pop();
                 for(var i = 0; i < maxPredictions; i++) {
-                    options.push([ClassLabels[i],""]);
+                    options.push([ClassLabels[i],ClassLabels[i]]);
                 }
             }
-            for(var i = 0; i < 1; i++) {
-                options.push(["", ""]);
-            }
+                options.push([" ", " "]);
+
             return options;
         }
     };
