@@ -257,18 +257,53 @@
         }
     };
 
+    maxPredictions= null;
+    var ClassLabels = [];
+
+    Blockly.JavaScript['classify_by_trained_model_image'] = async function(block) {
+        console.log("classifyByTrainedModelImage");
+        const modelURL = url + 'model.json';
+        const metadataURL = url + 'metadata.json';
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+        console.log(maxPredictions);
+        console.log(model.getClassLabels());
+
+        ClassLabels = model.getClassLabels();
+        // var code = 'classify_by_trained_model_image();\n';
+        return '\n';
+
+
+        //return 'classifyByTrainedModelImage();\n';
+
+    };
+
     Blockly.Blocks['classification_result_image'] = {
         init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("이미지 분류결과");
+            var input = this.appendDummyInput()
+                .appendField('이미지 분류결과')
+                .appendField(new Blockly.FieldDropdown(
+                    this.generateOptions), 'DAY');
             this.setInputsInline(true);
             this.setOutput(true, null);
             this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
+        }
+        ,
+        generateOptions: function() {
+            var options = [];
+            if(maxPredictions){
+                for(var i = 0; i < maxPredictions; i++) {
+                    options.push([ClassLabels[i],""]);
+                }
+            }
+            for(var i = 0; i < 1; i++) {
+                options.push(["", ""]);
+            }
+            return options;
         }
     };
+
+
 
     Blockly.Blocks['classification_result_voice'] = {
         init: function() {
@@ -291,18 +326,6 @@
             this.setInputsInline(true);
             this.setOutput(true, null);
             this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['class_learned_image'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습된 클래스");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(230);
             this.setTooltip("");
             this.setHelpUrl("");
         }

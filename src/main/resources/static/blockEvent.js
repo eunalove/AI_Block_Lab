@@ -1,3 +1,4 @@
+
 let model, webcam, labelContainer, maxPredictions, url;
 let isIos = false;
 
@@ -32,24 +33,6 @@ Blockly.JavaScript['url_image_receive'] = function(block) {
 };
 
 
-Blockly.JavaScript['classify_by_trained_model_image'] = async function(block) {
-    console.log("classifyByTrainedModelImage");
-    console.log("classify_by_trained_model_image 들어옴0");
-    const modelURL = url + 'model.json';
-    const metadataURL = url + 'metadata.json';
-    console.log("classify_by_trained_model_image 들어옴");
-    model = await tmImage.load(modelURL, metadataURL);
-    console.log("classify_by_trained_model_image 끝남");
-    maxPredictions = model.getTotalClasses();
-    console.log(maxPredictions);
-    console.log(model.getClassLabels());
-   // var code = 'classify_by_trained_model_image();\n';
-    return '\n';
-
-
-    //return 'classifyByTrainedModelImage();\n';
-
-};
 
 // Function to start the video
 async function startVideo() {
