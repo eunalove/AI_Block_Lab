@@ -2,9 +2,6 @@
 let model, webcam, labelContainer, maxPredictions, url;
 let isIos = false;
 
-
-labelContainer = document.getElementById('label-container');
-
 Blockly.JavaScript['start'] = function(block) {
     console.log("start");
     if (window.navigator.userAgent.indexOf('iPhone') > -1 || window.navigator.userAgent.indexOf('iPad') > -1) {
@@ -36,6 +33,7 @@ Blockly.JavaScript['url_image_receive'] = function(block) {
 
 // Function to start the video
 async function startVideo() {
+    console.log("startVideo 시작")
     const flip = true;
     const width = 500;
     const height = 500;
@@ -53,9 +51,36 @@ async function startVideo() {
         document.getElementById("webcam-container").appendChild(webcam.canvas);
     }
     webcam.play();
+    console.log("startVideo 끝")
+}
+
+// Function to perform prediction and update the label
+async function predictAndUpdateLabel() {
+    let prediction;
+    if (isIos) {
+        prediction = await model.predict(webcam.webcam);
+    } else {
+        prediction = await model.predict(webcam.canvas);
+    }
+    for (let i = 0; i < maxPredictions; i++) {
+        const classPrediction = prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
+        labelContainer.childNodes[i].innerHTML = classPrediction;
+    }
+}
+
+// Function to start the loop
+function startLoop() {
+    webcam.update();
+    predictAndUpdateLabel();
+    window.requestAnimationFrame(startLoop);
 }
 
 Blockly.JavaScript['when_detecting_image'] = async function(block) {
+    console.log("when_detecting_image 시작");
+    var class_image = block.getFieldValue('Lable');
+    console.log(class_image);
+
+    labelContainer = document.getElementById('label-container');
     await startVideo();
     for (let i = 0; i < maxPredictions; i++) {
         labelContainer.appendChild(document.createElement('div'));

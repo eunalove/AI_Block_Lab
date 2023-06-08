@@ -185,7 +185,7 @@
 
     Blockly.Blocks['when_detecting_image'] = {
         init: function() {
-            this.appendValueInput("NAME")
+            this.appendValueInput("class_image")
                 .setCheck(null)
                 .appendField("감지했을 때");
             this.setPreviousStatement(true, null);
@@ -443,8 +443,22 @@
             <block type="of_confidence_text"></block>
             <block type="class_learned_text"></block>
         </category>
-        <category name="흐름" colour="#9fa55b">
+        <category name="논리" colour="#5B80A5">
             <block type="controls_if"></block>
+            <block type="logic_compare">
+                <field name="OP">EQ</field>
+            </block>
+            <block type="logic_operation">
+                <field name="OP">AND</field>
+            </block>
+            <block type="logic_negate"></block>
+            <block type="logic_boolean">
+                <field name="BOOL">TRUE</field>
+            </block>
+            <block type="logic_null"></block>
+        </category>
+
+        <category name="반복" colour="#5BA55B">
             <block type="controls_repeat_ext">
                 <value name="TIMES">
                     <shadow type="math_number">
@@ -455,27 +469,153 @@
             <block type="controls_whileUntil">
                 <field name="MODE">WHILE</field>
             </block>
-        </category>
-        <category name="연산" colour="#a5745b">
-            <block type="math_number">
-                <field name="NUM">0</field>
-            </block>
-            <block type="text">
-                <field name="TEXT"></field>
-            </block>
-            <block type="logic_compare">
-                <field name="OP">EQ</field>
-            </block>
-            <block type="combine_letters"></block>
-        </category>
-        <category name="출력" colour="#a5745b">
-            <block type="print"></block>
-            <block type="show_results_together"></block>
-            <block type="show_results_in_order"></block>
             <block type="controls_flow_statements" disabled="true">
                 <field name="FLOW">BREAK</field>
             </block>
+        </category>
+
+        <category name="연산" colour="#5B67A5">
+
+
+            <block type="math_number">
+                <field name="NUM">0</field>
+            </block>
+            <block type="math_arithmetic">
+                <field name="OP">ADD</field>
+                <value name="A">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+                <value name="B">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_single">
+                <field name="OP">ROOT</field>
+                <value name="NUM">
+                    <shadow type="math_number">
+                        <field name="NUM">9</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_trig">
+                <field name="OP">SIN</field>
+                <value name="NUM">
+                    <shadow type="math_number">
+                        <field name="NUM">45</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_constant">
+                <field name="CONSTANT">PI</field>
+            </block>
+            <block type="math_number_property">
+                <mutation divisor_input="false"></mutation>
+                <field name="PROPERTY">EVEN</field>
+                <value name="NUMBER_TO_CHECK">
+                    <shadow type="math_number">
+                        <field name="NUM">0</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_round">
+                <field name="OP">ROUND</field>
+                <value name="NUM">
+                    <shadow type="math_number">
+                        <field name="NUM">3.1</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_on_list">
+                <mutation op="SUM"></mutation>
+                <field name="OP">SUM</field>
+            </block>
+            <block type="math_modulo">
+                <value name="DIVIDEND">
+                    <shadow type="math_number">
+                        <field name="NUM">64</field>
+                    </shadow>
+                </value>
+                <value name="DIVISOR">
+                    <shadow type="math_number">
+                        <field name="NUM">10</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_constrain">
+                <value name="VALUE">
+                    <shadow type="math_number">
+                        <field name="NUM">50</field>
+                    </shadow>
+                </value>
+                <value name="LOW">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+                <value name="HIGH">
+                    <shadow type="math_number">
+                        <field name="NUM">100</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="math_random_int">
+                <value name="FROM">
+                    <shadow type="math_number">
+                        <field name="NUM">1</field>
+                    </shadow>
+                </value>
+                <value name="TO">
+                    <shadow type="math_number">
+                        <field name="NUM">100</field>
+                    </shadow>
+                </value>
+            </block>
             <block type="math_random_float"></block>
+
+        </category>
+
+        <category name="텍스트" colour="#5BA58C">
+
+            <block type="text">
+                <field name="TEXT"></field>
+            </block>
+            <block type="text_join">
+                <mutation items="2"></mutation>
+            </block>
+            <block type="text_length">
+                <value name="VALUE">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="text_isEmpty">
+                <value name="VALUE">
+                    <shadow type="text">
+                        <field name="TEXT"></field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="text_changeCase">
+                <field name="CASE">UPPERCASE</field>
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="text_trim">
+                <field name="MODE">BOTH</field>
+                <value name="TEXT">
+                    <shadow type="text">
+                        <field name="TEXT">abc</field>
+                    </shadow>
+                </value>
+            </block>
             <block type="text_print">
                 <value name="TEXT">
                     <shadow type="text">
@@ -492,7 +632,86 @@
                     </shadow>
                 </value>
             </block>
+
         </category>
+
+        <category name="리스트" colour="#745BA5">
+            <block type="lists_create_with">
+                <mutation items="0"></mutation>
+            </block>
+            <block type="lists_create_with">
+                <mutation items="3"></mutation>
+            </block>
+            <block type="lists_repeat">
+                <value name="NUM">
+                    <shadow type="math_number">
+                        <field name="NUM">5</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="lists_length"></block>
+            <block type="lists_isEmpty"></block>
+            <block type="lists_split">
+                <mutation mode="SPLIT"></mutation>
+                <field name="MODE">SPLIT</field>
+                <value name="DELIM">
+                    <shadow type="text">
+                        <field name="TEXT">,</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="lists_sort">
+                <field name="TYPE">NUMERIC</field>
+                <field name="DIRECTION">1</field>
+            </block>
+        </category>
+
+        <category name="색깔" colour="#A5745B">
+
+            <block type="colour_picker">
+                <field name="COLOUR">#ff0000</field>
+            </block>
+            <block type="colour_random"></block>
+            <block type="colour_rgb">
+                <value name="RED">
+                    <shadow type="math_number">
+                        <field name="NUM">100</field>
+                    </shadow>
+                </value>
+                <value name="GREEN">
+                    <shadow type="math_number">
+                        <field name="NUM">50</field>
+                    </shadow>
+                </value>
+                <value name="BLUE">
+                    <shadow type="math_number">
+                        <field name="NUM">0</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="colour_blend">
+                <value name="COLOUR1">
+                    <shadow type="colour_picker">
+                        <field name="COLOUR">#ff0000</field>
+                    </shadow>
+                </value>
+                <value name="COLOUR2">
+                    <shadow type="colour_picker">
+                        <field name="COLOUR">#3333ff</field>
+                    </shadow>
+                </value>
+                <value name="RATIO">
+                    <shadow type="math_number">
+                        <field name="NUM">0.5</field>
+                    </shadow>
+                </value>
+            </block>
+
+
+        </category>
+
+
+
     </xml>
 
     <div class="chat_wrap">
@@ -532,9 +751,7 @@
 
 
 <script>
-    document.getElementById('overlay').style.display = 'none';
 
-/*
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
@@ -622,14 +839,14 @@
                 });
         }
 
-    });*/
+    });
 
     var workspace = Blockly.inject('blocklyDiv',
         { toolbox: document.getElementById('toolbox') });
 
     Blockly.JavaScript.init(workspace);
 
-/*
+
     // Blockly의 변화를 감지하는 이벤트 리스너를 추가합니다.
     workspace.addChangeListener(function(event) {
 
@@ -651,7 +868,7 @@
                 }
             }));
 
-        }/!*else if(eventJson.type === "selected"){
+        }/*else if(eventJson.type === "selected"){
             console.log("블록선택 보냄")
             stompClient.send("/app/sendBlock", {}, JSON.stringify({
                 'userId': userIdJson,
@@ -664,7 +881,8 @@
                 }
             }));
 
-        }*!/else if(eventJson.type === "move"){
+        }*/
+        else if(eventJson.type === "move"){
             console.log("블록무브 보냄")
             stompClient.send("/app/sendBlock", {}, JSON.stringify({
                 'userId': userIdJson,
@@ -714,7 +932,7 @@
 
         }
     });
-*/
+
 
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();

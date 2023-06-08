@@ -1,69 +1,97 @@
-let model, webcam, labelContainer, maxPredictions;
 
-let isIos = false;
-// fix when running demo in ios, video will be frozen;
-if (window.navigator.userAgent.indexOf('iPhone') > -1 || window.navigator.userAgent.indexOf('iPad') > -1) {
-    isIos = true;
-}
 
-init();
+    let model, webcam, labelContainer, maxPredictions;
+    let isIos = false;
+    let IsVideo = false;
 
-// Load the image model and setup the webcam
-async function init() {
-    const modelURL = URL + 'model.json';
-    const metadataURL = URL + 'metadata.json';
+    let modelURL;
+    let metadataURL;
 
-    // load the model and metadata
-    // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-    // or files from your local hard drive
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
+    enterImageClassificationModelURL("https://teachablemachine.withgoogle.com/models/okWkNoAb-k/");
+    classifyUsingTrainedImageModel();
 
-    // Convenience function to setup a webcam
-    const flip = true; // whether to flip the webcam
+    detectWhenClassesAppear();
+
+    async function turnOnVideoScreen() {
+    const flip = true;
     const width = 500;
     const height = 500;
     webcam = new tmImage.Webcam(width, height, flip);
-    await webcam.setup(); // request access to the webcam
+    webcam.canvas = document.createElement('canvas'); // Initialize webcam.canvas
+    await webcam.setup();
 
     if (isIos) {
-        document.getElementById('webcam-container').appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-        // grab video-object in any way you want and set the attributes
-        const webCamVideo = document.getElementsByTagName('video')[0];
-        webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-        webCamVideo.muted = "true";
-        webCamVideo.style.width = width + 'px';
-        webCamVideo.style.height = height + 'px';
-    } else {
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-    }
-    // append elements to the DOM
-    labelContainer = document.getElementById('label-container');
-    for (let i = 0; i < maxPredictions; i++) { // and class labels
-        labelContainer.appendChild(document.createElement('div'));
-    }
+    document.getElementById('webcam-container').appendChild(webcam.webcam);
+    const webCamVideo = document.getElementsByTagName('video')[0];
+    webCamVideo.setAttribute("playsinline", true);
+    webCamVideo.muted = "true";
+    webCamVideo.style.width = width + 'px';
+    webCamVideo.style.height = height + 'px';
+} else {
+    document.getElementById("webcam-container").appendChild(webcam.canvas);
+}
     webcam.play();
-    window.requestAnimationFrame(loop);
 }
 
-async function loop() {
-    webcam.update(); // update the webcam frame
-    await predict();
-    window.requestAnimationFrame(loop);
+    // Function to start the loop
+    function startLoop() {
+    webcam.update();
+    predictAndUpdateLabel();
+    window.requestAnimationFrame(startLoop);
+    //setTimeout(stopLoop, 1000);
 }
 
-// run the webcam image through the image model
-async function predict() {
-    // predict can take in an image, video or canvas html element
+    function stopLoop() {
+    webcam.stop();
+}
+
+    function enterImageClassificationModelURL(URL) {
+    modelURL = URL + 'model.json';
+    metadataURL = URL + 'metadata.json';
+    return;
+}
+
+
+    async function classifyUsingTrainedImageModel() {
+    model = await tmImage.load(modelURL, metadataURL);
+    console.log( model.getClassLabels());
+    maxPredictions = model.getTotalClasses();
+}
+
+    function getTrainedClasses() {
+    const classes = model.getClasses();
+    console.log(classes);
+    return classes;
+}
+
+    // Function to perform prediction and update the label
+    async function predictAndUpdateLabel() {
     let prediction;
+    labelContainer = document.getElementById('label-container');
     if (isIos) {
-        prediction = await model.predict(webcam.webcam);
-    } else {
-        prediction = await model.predict(webcam.canvas);
-    }
+    prediction = await model.predict(webcam.webcam);
+} else {
+    prediction = await model.predict(webcam.canvas);
+}
     for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
+    const classPrediction = prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
+    labelContainer.childNodes[i].innerHTML = classPrediction;
+}
+}
+
+    async function detectWhenClassesAppear() {
+    turnOnVideoScreen();
+
+    for (let i = 0; i < maxPredictions; i++) {
+    labelContainer.appendChild(document.createElement('div'));
+}
+
+    /*    for (let i = 0; i < prediction.length; i++) {
+            if (prediction[i].probability > 0.5) {
+                console.log(`Detected class: ${prediction[i].className}, Confidence: ${prediction[i].probability}`);
+            }
+        }*/
+
+    window.requestAnimationFrame(startLoop);
+    //setTimeout(detectWhenClassesAppear, 1000);
 }
