@@ -752,6 +752,8 @@
 
 <script>
 
+    document.getElementById('overlay').style.display = 'none';
+/*
     const joinButton = document.getElementById('join-button');
     const authTitle = document.getElementById('auth-title');
     const loginButton = document.getElementById('login-button');
@@ -840,6 +842,7 @@
         }
 
     });
+*/
 
     var workspace = Blockly.inject('blocklyDiv',
         { toolbox: document.getElementById('toolbox') });
@@ -934,12 +937,89 @@
     });
 
 
+
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
 
+        function findBlockInChildren(block, type) {
+            if(block.type === type) {
+                return true;
+            }
+            for(var i = 0; i < block.getChildren().length; i++) {
+                if(findBlockInChildren(block.getChildren()[i], type)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         topBlocks.forEach(function(block) {
             if(block.type === 'start') {
+                    if (findBlockInChildren(block, 'classify_by_trained_model_image')) {
+                        var imageInputWindow = window.open("", "Image Input", "width=500,height=600");
+                        imageInputWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Image Input</title>
+                        <style>
+                            #output { max-width: 200px; max-height: 200px; }
+                            #video { width: 300px; height: 300px; }
+                            #submit { position: absolute; bottom: 0; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Upload Image or Capture from Webcam</h1>
+                        <button id="capture">Capture</button>
+                        <input type="file" id="fileUpload" accept="image/*" />
+                        <div id="streamingSection" style="display: none;">
+                            <video id="video" autoplay></video>
+                            <button id="takePicture">Take picture</button>
+                            <canvas id="canvas" width="200" height="200"></canvas>
+                        </div>
+                        <img id="output" />
+                        <button id="submit">Submit</button>
+                    </body>
+                </html>
+                `);
+                        var scriptElement = imageInputWindow.document.createElement('script');
+                        scriptElement.innerHTML = `
+                    var video = document.getElementById('video');
+                    var canvas = document.getElementById('canvas');
+                    var context = canvas.getContext('2d');
+                    var output = document.getElementById('output');
+                    var captureButton = document.getElementById('capture');
+                    var takePictureButton = document.getElementById('takePicture');
+
+                    captureButton.addEventListener('click', function() {
+                        document.getElementById('streamingSection').style.display = 'block';
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                            .then(stream => video.srcObject = stream)
+                            .catch(e => console.log(e));
+                    });
+
+                    takePictureButton.addEventListener('click', function() {
+                        context.drawImage(video, 0, 0, 200, 200);
+                        output.src = canvas.toDataURL('image/png');
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        document.getElementById('streamingSection').style.display = 'none';
+                    });
+
+                    document.getElementById('fileUpload').addEventListener('change', function(e) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            output.src = e.target.result;
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    });
+
+                    document.getElementById('submit').addEventListener('click', function() {
+                        // TODO: 이미지 처리 로직 구현
+                    });
+                `;
+                        imageInputWindow.document.body.appendChild(scriptElement);
+                    }
+
                 var code = Blockly.JavaScript.blockToCode(block);
                 try {
                     eval(code);
@@ -948,8 +1028,6 @@
                 }
             }
         });
-
-
     });
 
     // 초대 링크 보기 버튼
