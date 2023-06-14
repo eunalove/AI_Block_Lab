@@ -11,12 +11,14 @@ Blockly.JavaScript['start'] = function(block) {
 };
 
 
-Blockly.JavaScript['turn_on_the_video'] = function(block) {
-    console.log("turnOnTheVideo");
+/*
+Blockly.JavaScript['get_image_input'] = function(block) {
+    console.log("get_image_input");
     var code = '\n';
     return code;
 
 };
+*/
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
     console.log("url_image_receive");
