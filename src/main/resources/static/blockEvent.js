@@ -11,12 +11,14 @@ Blockly.JavaScript['start'] = function(block) {
 };
 
 
-Blockly.JavaScript['turn_on_the_video'] = function(block) {
-    console.log("turnOnTheVideo");
+/*
+Blockly.JavaScript['get_image_input'] = function(block) {
+    console.log("get_image_input");
     var code = '\n';
     return code;
 
 };
+*/
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
     console.log("url_image_receive");
@@ -78,7 +80,6 @@ function startLoop() {
 Blockly.JavaScript['when_detecting_image'] = async function(block) {
     console.log("when_detecting_image 시작");
     var class_image = block.getFieldValue('Lable');
-    console.log(class_image);
 
     labelContainer = document.getElementById('label-container');
     await startVideo();
