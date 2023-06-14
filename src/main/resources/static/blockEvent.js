@@ -78,7 +78,6 @@ function startLoop() {
 Blockly.JavaScript['when_detecting_image'] = async function(block) {
     console.log("when_detecting_image 시작");
     var class_image = block.getFieldValue('Lable');
-    console.log(class_image);
 
     labelContainer = document.getElementById('label-container');
     await startVideo();
