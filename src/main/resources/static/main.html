@@ -1025,6 +1025,7 @@ captureButton.addEventListener('click', function() {
             };
         })
         .catch(e => console.log(e));
+
     } else {
         context.drawImage(video, 0, 0, 300, 300);
         output.src = canvas.toDataURL('image/png');
