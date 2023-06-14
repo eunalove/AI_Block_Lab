@@ -957,28 +957,51 @@
         topBlocks.forEach(function(block) {
             if(block.type === 'start') {
                     if (findBlockInChildren(block, 'classify_by_trained_model_image')) {
-                        var imageInputWindow = window.open("", "Image Input", "width=500,height=600");
+                        var imageInputWindow = window.open("", "Image Input", "width=400,height=450");
                         imageInputWindow.document.write(`
-                <html>
+                 <html>
                     <head>
                         <title>Image Input</title>
-                        <style>
-                            #output { max-width: 200px; max-height: 200px; }
-                            #video { width: 300px; height: 300px; }
-                            #submit { position: absolute; bottom: 0; }
-                        </style>
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+                       <style>
+    body { background: #f5f5f5; padding: 20px; }
+    #video, #output { max-width: 300px; max-height: 300px; object-fit: cover; }
+    #output { border: 1px solid black; padding: 10px; margin-bottom: 10px; display: none; }
+    #video, #canvas { width: 300px; height: 300px }
+    #video {
+     display: none; /* 처음에 비디오가 쓸데없이 공간을 차지하지 못하도록 함*/
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
+    #streamingSection { display: none; }
+    #capture, #submit, #takePicture, #fileUpload { margin-top: 20px; }
+    .btn { width: 100%; }
+    .form-group { margin-bottom: 1rem; }
+</style>
                     </head>
                     <body>
-                        <h1>Upload Image or Capture from Webcam</h1>
-                        <button id="capture">Capture</button>
-                        <input type="file" id="fileUpload" accept="image/*" />
-                        <div id="streamingSection" style="display: none;">
-                            <video id="video" autoplay></video>
-                            <button id="takePicture">Take picture</button>
-                            <canvas id="canvas" width="200" height="200"></canvas>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                 <video id="video" autoplay class="img-fluid"></video>
+                                 <img id="output" autoplay class="img-fluid">
+
+                            </div>
+                            <div id="streamingSection" class="row justify-content-center">
+                                <video id="video" autoplay></video>
+                                <canvas id="canvas" width="300" height="300" class="d-none"></canvas>
+                            </div>
+                            <div class="form-group">
+                                <button id="capture" class="btn btn-primary">촬영</button>
+                                <button id="takePicture" class="btn btn-primary d-none">촬영하기</button>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" id="fileUpload" accept="image/*" class="form-control-file" />
+                            </div>
+                            <div class="form-group">
+                                <button id="submit" class="btn btn-success">Submit</button>
+                            </div>
                         </div>
-                        <img id="output" />
-                        <button id="submit">Submit</button>
                     </body>
                 </html>
                 `);
@@ -991,24 +1014,42 @@
                     var captureButton = document.getElementById('capture');
                     var takePictureButton = document.getElementById('takePicture');
 
-                    captureButton.addEventListener('click', function() {
-                        document.getElementById('streamingSection').style.display = 'block';
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(stream => video.srcObject = stream)
-                            .catch(e => console.log(e));
-                    });
+captureButton.addEventListener('click', function() {
+    if (!video.srcObject) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.style.display = "block"; // video를 보이게 합니다.
+            video.srcObject = stream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+        })
+        .catch(e => console.log(e));
+    } else {
+        context.drawImage(video, 0, 0, 300, 300);
+        output.src = canvas.toDataURL('image/png');
+        output.style.display = "block"; // 이미지를 보이게 합니다.
+        video.style.display = "none"; // video를 숨겨 쓸데없는 공간을 차지 하지 않게함
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+});
+
+
 
                     takePictureButton.addEventListener('click', function() {
                         context.drawImage(video, 0, 0, 200, 200);
-                        output.src = canvas.toDataURL('image/png');
                         video.srcObject.getTracks().forEach(track => track.stop());
-                        document.getElementById('streamingSection').style.display = 'none';
-                    });
+                     });
 
                     document.getElementById('fileUpload').addEventListener('change', function(e) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
                             output.src = e.target.result;
+                             if(video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
                         };
                         reader.readAsDataURL(e.target.files[0]);
                     });
@@ -1019,7 +1060,6 @@
                 `;
                         imageInputWindow.document.body.appendChild(scriptElement);
                     }
-
                 var code = Blockly.JavaScript.blockToCode(block);
                 try {
                     eval(code);
