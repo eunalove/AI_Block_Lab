@@ -297,7 +297,7 @@
                     options.push([ClassLabels[i],ClassLabels[i]]);
                 }
             }
-                options.push([" ", " "]);
+            options.push([" ", " "]);
 
             return options;
         }
@@ -752,94 +752,97 @@
 
 <script>
 
-    const joinButton = document.getElementById('join-button');
-    const authTitle = document.getElementById('auth-title');
-    const loginButton = document.getElementById('login-button');
-    let isSignUp = false;
-    let userId;
-    let userIdJson;
-    let urlParams = new URLSearchParams(window.location.search);
-    let invitationParam = urlParams.get('invitation');
+    document.getElementById('overlay').style.display = 'none';
+    /*
+        const joinButton = document.getElementById('join-button');
+        const authTitle = document.getElementById('auth-title');
+        const loginButton = document.getElementById('login-button');
+        let isSignUp = false;
+        let userId;
+        let userIdJson;
+        let urlParams = new URLSearchParams(window.location.search);
+        let invitationParam = urlParams.get('invitation');
 
-    const isRedirection = localStorage.getItem("isRedirection");
-    //URL에 isRedirection이 있으면 웹소켓에 연결만 하고 로그인창을 띄우지 않음
-    if(isRedirection){
-        document.getElementById('overlay').style.display = 'none';
-        // 로그인된 사용자의 userId 가져오기
-        const userId = localStorage.getItem("userId");
-        userIdJson = userId;
-        connect(userId, invitationParam);
-        // 이제 isRedirection 값을 로컬 스토리지에서 삭제합니다.
-        localStorage.removeItem("isRedirection");
-    }
-
-    joinButton.addEventListener('click', () => {
-        isSignUp = !isSignUp;
-        if (isSignUp) {
-            authTitle.textContent = '회원가입을 해주세요.';
-            loginButton.textContent = '회원가입 완료';
-            joinButton.textContent = '로그인 화면';
-        } else {
-            authTitle.textContent = '로그인을 해주세요.';
-            loginButton.textContent = '로그인';
-            joinButton.textContent = '회원가입';
+        const isRedirection = localStorage.getItem("isRedirection");
+        //URL에 isRedirection이 있으면 웹소켓에 연결만 하고 로그인창을 띄우지 않음
+        if(isRedirection){
+            document.getElementById('overlay').style.display = 'none';
+            // 로그인된 사용자의 userId 가져오기
+            const userId = localStorage.getItem("userId");
+            userIdJson = userId;
+            connect(userId, invitationParam);
+            // 이제 isRedirection 값을 로컬 스토리지에서 삭제합니다.
+            localStorage.removeItem("isRedirection");
         }
-    });
 
-    loginButton.addEventListener('click', () => {
-        if (isSignUp) {
-            // 회원가입 처리 코드를 여기에 작성하세요.
-            var userId = document.getElementById("id-input").value;
-            var password = document.getElementById("pw-input").value;
+        joinButton.addEventListener('click', () => {
+            isSignUp = !isSignUp;
+            if (isSignUp) {
+                authTitle.textContent = '회원가입을 해주세요.';
+                loginButton.textContent = '회원가입 완료';
+                joinButton.textContent = '로그인 화면';
+            } else {
+                authTitle.textContent = '로그인을 해주세요.';
+                loginButton.textContent = '로그인';
+                joinButton.textContent = '회원가입';
+            }
+        });
 
-            signUp(userId, password)
-                .then(function(response) {
-                    if (response.ok) {
-                        // 회원가입 성공
-                        console.log("회원가입 성공");
+        loginButton.addEventListener('click', () => {
+            if (isSignUp) {
+                // 회원가입 처리 코드를 여기에 작성하세요.
+                var userId = document.getElementById("id-input").value;
+                var password = document.getElementById("pw-input").value;
 
-                        document.getElementById('overlay').style.display = 'none';
+                signUp(userId, password)
+                    .then(function(response) {
+                        if (response.ok) {
+                            // 회원가입 성공
+                            console.log("회원가입 성공");
 
-                        showToast("회원가입 성공!", 2000);
+                            document.getElementById('overlay').style.display = 'none';
 
-                    } else {
-                        // 회원가입 실패
-                        console.log("회원가입 실패");
-                    }
-                });
-        } else {
-            // 로그인 처리 코드를 여기에 작성하세요.
-            var userId = document.getElementById("id-input").value;
-            userId_Json = userId;
-            var password = document.getElementById("pw-input").value;
-            login(userId, password)
-                .then(async function(response) {
-                    if (response.ok) {
-
-                        // 처리 완료 후 창을 닫습니다.
-                        document.getElementById('overlay').style.display = 'none';
-
-
-                        const updateResponse = await updateUserInvitationLink(userId, invitationParam );
-
-                        if (updateResponse.ok) {
-                            console.log("User invitation link updated successfully.");
-                            userIdJson = userId;
-
-                            connect(userId, invitationParam);
-
+                            showToast("회원가입 성공!", 2000);
 
                         } else {
-                            console.error("Failed to update user invitation link.");
+                            // 회원가입 실패
+                            console.log("회원가입 실패");
                         }
-                    } else {
-                        // 로그인 실패
-                        showToast("아이디와 비밀번호를 다시 확인해주십시오", 2000);
-                    }
-                });
-        }
+                    });
+            } else {
+                // 로그인 처리 코드를 여기에 작성하세요.
+                var userId = document.getElementById("id-input").value;
+                userId_Json = userId;
+                var password = document.getElementById("pw-input").value;
+                login(userId, password)
+                    .then(async function(response) {
+                        if (response.ok) {
 
-    });
+                            // 처리 완료 후 창을 닫습니다.
+                            document.getElementById('overlay').style.display = 'none';
+
+
+                            const updateResponse = await updateUserInvitationLink(userId, invitationParam );
+
+                            if (updateResponse.ok) {
+                                console.log("User invitation link updated successfully.");
+                                userIdJson = userId;
+
+                                connect(userId, invitationParam);
+
+
+                            } else {
+                                console.error("Failed to update user invitation link.");
+                            }
+                        } else {
+                            // 로그인 실패
+                            showToast("아이디와 비밀번호를 다시 확인해주십시오", 2000);
+                        }
+                    });
+            }
+
+        });
+    */
 
     var workspace = Blockly.inject('blocklyDiv',
         { toolbox: document.getElementById('toolbox') });
@@ -934,12 +937,138 @@
     });
 
 
+
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
 
+        function findBlockInChildren(block, type) {
+            if(block.type === type) {
+                return true;
+            }
+            for(var i = 0; i < block.getChildren().length; i++) {
+                if(findBlockInChildren(block.getChildren()[i], type)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         topBlocks.forEach(function(block) {
             if(block.type === 'start') {
+                if (findBlockInChildren(block, 'classify_by_trained_model_image')) {
+                    var imageInputWindow = window.open("", "Image Input", "width=400,height=450");
+                    imageInputWindow.document.write(`
+                 <html>
+                    <head>
+                        <title>Image Input</title>
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+                       <style>
+    body { background: #f5f5f5; padding: 20px; }
+    #video, #output { max-width: 300px; max-height: 300px; object-fit: cover; }
+    #output { border: 1px solid black; padding: 10px; margin-bottom: 10px; display: none; }
+    #video, #canvas { width: 300px; height: 300px }
+    #video {
+     display: none; /* 처음에 비디오가 쓸데없이 공간을 차지하지 못하도록 함*/
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
+    #streamingSection { display: none; }
+    #capture, #submit, #takePicture, #fileUpload { margin-top: 20px; }
+    .btn { width: 100%; }
+    .form-group { margin-bottom: 1rem; }
+</style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                 <video id="video" autoplay class="img-fluid"></video>
+                                 <img id="output" autoplay class="img-fluid">
+
+                            </div>
+                            <div id="streamingSection" class="row justify-content-center">
+                                <video id="video" autoplay></video>
+                                <canvas id="canvas" width="300" height="300" class="d-none"></canvas>
+                            </div>
+                            <div class="form-group">
+                                <button id="capture" class="btn btn-primary">촬영</button>
+                                <button id="takePicture" class="btn btn-primary d-none">촬영하기</button>
+                            </div>
+                          <div class="form-group">
+    <label class="btn btn-primary btn-block" for="fileUpload">
+        파일 선택
+    </label>
+    <input type="file" class="d-none" id="fileUpload" accept="image/*">
+</div>
+  <div class="form-group">
+                                <button id="submit" class="btn btn-success">선택완료</button>
+                            </div>
+                        </div>
+                    </body>
+                </html>
+                `);
+                    var scriptElement = imageInputWindow.document.createElement('script');
+                    scriptElement.innerHTML = `
+                    var video = document.getElementById('video');
+                    var canvas = document.getElementById('canvas');
+                    var context = canvas.getContext('2d');
+                    var output = document.getElementById('output');
+                    var captureButton = document.getElementById('capture');
+                    var takePictureButton = document.getElementById('takePicture');
+
+captureButton.addEventListener('click', function() {
+    if (!video.srcObject) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.style.display = "block"; // video를 보이게 합니다.
+            video.srcObject = stream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+        })
+        .catch(e => console.log(e));
+
+    } else {
+        context.drawImage(video, 0, 0, 300, 300);
+        output.src = canvas.toDataURL('image/png');
+        output.style.display = "block"; // 이미지를 보이게 합니다.
+        video.style.display = "none"; // video를 숨겨 쓸데없는 공간을 차지 하지 않게함
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+});
+
+
+
+                    takePictureButton.addEventListener('click', function() {
+                        context.drawImage(video, 0, 0, 200, 200);
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                     });
+
+                    document.getElementById('fileUpload').addEventListener('change', function(e) {
+                      var label = this.previousElementSibling;
+    var fileName = this.files[0].name;
+    label.textContent = fileName;
+
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                        output.style.display = "block"; // 이미지를 보이게 합니다.
+                            output.src = e.target.result;
+                             if(video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    });
+
+                    document.getElementById('submit').addEventListener('click', function() {
+                        // TODO: 이미지 처리 로직 구현
+                    });
+                `;
+                    imageInputWindow.document.body.appendChild(scriptElement);
+                }
                 var code = Blockly.JavaScript.blockToCode(block);
                 try {
                     eval(code);
@@ -948,8 +1077,6 @@
                 }
             }
         });
-
-
     });
 
     // 초대 링크 보기 버튼
