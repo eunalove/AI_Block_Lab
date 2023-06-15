@@ -29,6 +29,11 @@
 <script src="blockEvent.js"></script>
 <script src="blockDefine.js"></script>
 
+<!-- JS interpreter를 위해 추가-->
+<script src="JS-Interpreter/acorn_interpreter.js"></script>
+<script src="JS-Interpreter/acorn.js"></script>
+<script src="JS-Interpreter/interpreter.js"></script>
+
 <body>
 
 <div id="overlay">
@@ -68,7 +73,7 @@
         <category name="이미지 인식" colour="#5b67a5">
 
             <block type="learning_image_ai"></block>
-           <!--  <block type="get_image_input"> </block>-->
+           <block type="get_image_input"> </block>
             <block type="url_image_receive"></block>
             <block type="classify_by_trained_model_image"></block>
             <block type="when_detecting_image"></block>
@@ -401,8 +406,9 @@
 
 
 <script>
-    //document.getElementById('overlay').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
 
+    var teamMemberPredictions = {};
     let loggedInUsers = [];
 
     const joinButton = document.getElementById('join-button');
@@ -608,35 +614,177 @@
 
     });
 
+    var outputImage = null;
+
+    var myAsyncFunction = function(callback) {
+
+            var imageInputWindow = window.open("", "Image Input", "width=400,height=450");
+            imageInputWindow.document.write(`
+                 <html>
+                    <head>
+                        <title>Image Input</title>
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+                       <style>
+    body { background: #f5f5f5; padding: 20px; }
+    #video, #output { max-width: 300px; max-height: 300px; object-fit: cover; }
+    #output { border: 1px solid black; padding:10px; margin-bottom: 10px; display: none; }
+    #video, #canvas { width: 300px; height: 300px }
+    #video {
+     display: none; /* 처음에 비디오가 쓸데없이 공간을 차지하지 못하도록 함*/
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
+    #streamingSection { display: none; }
+    #capture, #submit, #takePicture, #fileUpload { margin-top: 20px; }
+    .btn { width: 100%; }
+    .form-group { margin-bottom: 1rem; }
+</style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                 <video id="video" autoplay class="img-fluid"></video>
+                                 <img id="output" autoplay class="img-fluid">
+
+                            </div>
+                            <div id="streamingSection" class="row justify-content-center">
+                                <video id="video" autoplay></video>
+                                <canvas id="canvas" width="300" height="300" class="d-none"></canvas>
+                            </div>
+                            <div class="form-group">
+                                <button id="capture" class="btn btn-primary">촬영</button>
+                                <button id="takePicture" class="btn btn-primary d-none">촬영하기</button>
+                            </div>
+                          <div class="form-group">
+    <label class="btn btn-primary btn-block" for="fileUpload">
+        파일 선택
+    </label>
+    <input type="file" class="d-none" id="fileUpload" accept="image/*">
+</div>
+  <div class="form-group">
+                                <button id="submit" class="btn btn-success">선택완료</button>
+                            </div>
+                        </div>
+                    </body>
+                </html>
+                `);
+            var scriptElement = imageInputWindow.document.createElement('script');
+            scriptElement.innerHTML = `
+                    var video = document.getElementById('video');
+                    var canvas = document.getElementById('canvas');
+                    var context = canvas.getContext('2d');
+                    var output = document.getElementById('output');
+                    var captureButton = document.getElementById('capture');
+                    var takePictureButton = document.getElementById('takePicture');
+
+captureButton.addEventListener('click', function() {
+    if (!video.srcObject) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.style.display = "block"; // video를 보이게 합니다.
+            video.srcObject = stream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+        })
+        .catch(e => console.log(e));
+
+    } else {
+        context.drawImage(video, 0, 0, 300, 300);
+        output.src = canvas.toDataURL('image/png');
+        output.style.display = "block"; // 이미지를 보이게 합니다.
+        video.style.display = "none"; // video를 숨겨 쓸데없는 공간을 차지 하지 않게함
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+});
+
+
+
+                    takePictureButton.addEventListener('click', function() {
+                        context.drawImage(video, 0, 0, 200, 200);
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                     });
+
+                    document.getElementById('fileUpload').addEventListener('change', function(e) {
+                      var label = this.previousElementSibling;
+    var fileName = this.files[0].name;
+    label.textContent = fileName;
+
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                        output.style.display = "block"; // 이미지를 보이게 합니다.
+                            output.src = e.target.result;
+                             if(video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    });
+
+                    document.getElementById('submit').addEventListener('click', function() {
+
+
+
+  var base64Image = output.src;  // Get the base64 data of the image from output src
+window.opener.postMessage(base64Image, '*');
+ callback(); // 이 부분은 함수가 완료되었음을 Interpreter에 알립니다.
+// window.close();
+
+
+
+
+
+                    });
+                `;
+            imageInputWindow.document.body.appendChild(scriptElement);
+
+
+    };
+
+
+    Blockly.JavaScript['get_image_input'] = function(block) {
+        console.log("get_image_input")
+        var code = 'get_image_input();\n';
+        return code;
+    };
+
+
+    function initInterpreter(interpreter, globalObject) {
+        var asyncWrapper = function(callback) {
+            return function() {
+                myAsyncFunction(callback);
+            }
+        };
+        interpreter.setProperty(globalObject, 'get_image_input',
+            interpreter.createAsyncFunction(asyncWrapper));
+    }
 
 
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
 
-        function findBlockInChildren(block, type) {
-            if(block.type === type) {
-                return true;
-            }
-            for(var i = 0; i < block.getChildren().length; i++) {
-                if(findBlockInChildren(block.getChildren()[i], type)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         topBlocks.forEach(function(block) {
             if(block.type === 'start') {
                 var code = Blockly.JavaScript.blockToCode(block);
-                try {
-                    eval(code);
-                } catch(e) {
-                    alert(e);
+                myInterpreter = new Interpreter(code, initInterpreter); // `initInterpreter`를 인터프리터에 전달합니다.
+
+                function nextStep() {
+                    if (myInterpreter.run()) {
+                        // Interpreter가 아직 끝나지 않았으면, 다음 단계를 예약합니다.
+                        setTimeout(nextStep, 10);
+                    }
                 }
+
+                nextStep();
             }
         });
     });
+
+
 
     // 초대 링크 보기 버튼
     document.getElementById('invite-button').addEventListener('click', () => {
@@ -646,9 +794,6 @@
             confirmButtonText: '확인'
         });
     });
-
-
-
 
 </script>
 
