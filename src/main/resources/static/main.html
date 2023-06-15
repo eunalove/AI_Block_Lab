@@ -588,7 +588,24 @@
                 }
             }));
 
+        }else if(eventJson.type === "change"){
+            console.log("UI변경 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'blockId': eventJson.blockId,
+                    'element': eventJson.element,
+                    'group': eventJson.group,
+                    'name': eventJson.name,
+                    'newValue': eventJson.newValue,
+                    'oldValue': eventJson.oldValue,
+                    'type': eventJson.type
+                }
+            }));
+
         }
+
     });
 
 
