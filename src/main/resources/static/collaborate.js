@@ -13,8 +13,14 @@ function connect(userId, userInvitationLink) {
         stompClient.subscribe('/topic/receiveChat/' + userInvitationLink, function (receiveMsg) {
             console.log('showGreeting:');
             const receivedMessage = JSON.parse(receiveMsg.body);
-            addMessageToChat(receivedMessage.senderName , receivedMessage.message, receivedMessage.senderName  === chat_userId);
 
+            // If received message is an array, update logged in users and dropdown
+            if (Array.isArray(receivedMessage)) {
+                loggedInUsers = receivedMessage;
+                Blockly.Blocks['teamMemberId'].updateDropdown();
+            } else {
+                addMessageToChat(receivedMessage.senderName, receivedMessage.message, receivedMessage.senderName === chat_userId);
+            }
         });
 
         stompClient.subscribe('/topic/receiveBlock/' + userInvitationLink, function (synBlockMsg) {
@@ -57,13 +63,6 @@ function addMessageToChat(senderName, message, isMyMessage) {
         newMessage.style.margin = '10px 20px';
         newMessage.style.textAlign = 'center';
         chatUl.appendChild(newMessage);
-
-        // 새로운 사용자가 로그인한 경우, 해당 사용자를 로그인된 사용자 목록에 추가
-        if (!loggedInUsers.includes(senderName)) {
-            loggedInUsers.push(senderName);
-            // Blockly 드롭다운 업데이트
-            Blockly.Blocks['teamMemberId'].updateDropdown();
-        }
 
     }else {
         appendMessageTag(LR_className, senderName, message);

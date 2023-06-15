@@ -7,6 +7,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Controller
 public class ChattingController {
@@ -14,7 +16,8 @@ public class ChattingController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
+    // Logged in users
+    private List<String> loggedInUsers = new CopyOnWriteArrayList<>();
 
     @MessageMapping("/sendChat")
     public void receiveMsg(SendChat message, Principal principal) throws Exception {
@@ -23,8 +26,13 @@ public class ChattingController {
         //여기서는 사용되지 않음
         String userInvitationLink = message.getUserInvitationLink();
         String destination = "/topic/receiveChat/" + userInvitationLink;
-        System.out.println("destination = " + destination);
-        System.out.println("구독 전송 직전");
+
+        // If user is not in logged in users, add to list
+        if (!loggedInUsers.contains(message.getName())) {
+            loggedInUsers.add(message.getName());
+            // Broadcast updated list of users to all connected clients
+            messagingTemplate.convertAndSend(destination, loggedInUsers);
+        }
 
         //같은 초대 링크를 가진 사용자들이 구독하는 대상
         messagingTemplate.convertAndSend(destination,  new ReceiveChat(message.getName(), message.getMessage()));
