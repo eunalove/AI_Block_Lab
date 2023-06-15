@@ -401,8 +401,11 @@
 
 
 <script>
-    document.getElementById('overlay').style.display = 'none';
- const joinButton = document.getElementById('join-button');
+    //document.getElementById('overlay').style.display = 'none';
+
+    let loggedInUsers = [];
+
+    const joinButton = document.getElementById('join-button');
         const authTitle = document.getElementById('auth-title');
         const loginButton = document.getElementById('login-button');
         let isSignUp = false;
@@ -504,6 +507,9 @@
 
         // 이벤트를 JSON으로 변환합니다.
         var eventJson = event.toJson();
+
+        console.log("eventJson:");
+        console.log(eventJson);
 
         if(eventJson.type === "create") {
             console.log("블록생성 보냄")

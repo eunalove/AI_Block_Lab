@@ -58,6 +58,12 @@ function addMessageToChat(senderName, message, isMyMessage) {
         newMessage.style.textAlign = 'center';
         chatUl.appendChild(newMessage);
 
+        // 새로운 사용자가 로그인한 경우, 해당 사용자를 로그인된 사용자 목록에 추가
+        if (!loggedInUsers.includes(senderName)) {
+            loggedInUsers.push(senderName);
+            // Blockly 드롭다운 업데이트
+            Blockly.Blocks['teamMemberId'].updateDropdown();
+        }
 
     }else {
         appendMessageTag(LR_className, senderName, message);

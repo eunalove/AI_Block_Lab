@@ -26,16 +26,15 @@ Blockly.Blocks['teamMemberId'] = {
     }
     ,
     generateOptions: function() {
-        var options = [];
-        if(maxPredictions){
-            options.pop();
-            for(var i = 0; i < maxPredictions; i++) {
-                options.push([ClassLabels[i],ClassLabels[i]]);
-            }
-        }
-        options.push([" ", " "]);
-
-        return options;
+        return loggedInUsers.map(function(userId) {
+            return [userId, userId];
+        });
+    },
+    // 로그인된 사용자 목록이 변경되면 드롭다운을 업데이트하는 메서드
+    updateDropdown: function() {
+        this.getInput("NAME")
+            .removeField("Lable")
+            .appendField(new Blockly.FieldDropdown(this.generateOptions), 'Lable');
     }
 };
 
