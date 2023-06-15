@@ -12,6 +12,35 @@ Blockly.Blocks['start'] = {
     }
 };
 
+
+
+Blockly.Blocks['teamMemberId'] = {
+    init: function () {
+        var input = this.appendValueInput("NAME")
+            .appendField('팀원 아이디')
+            .appendField(new Blockly.FieldDropdown(
+                this.generateOptions), 'Lable');
+        this.setInputsInline(true);
+        this.setOutput(true, null);
+        this.setColour(15);
+    }
+    ,
+    generateOptions: function() {
+        var options = [];
+        if(maxPredictions){
+            options.pop();
+            for(var i = 0; i < maxPredictions; i++) {
+                options.push([ClassLabels[i],ClassLabels[i]]);
+            }
+        }
+        options.push([" ", " "]);
+
+        return options;
+    }
+};
+
+
+
 Blockly.Blocks['learning_image_ai'] = {
     init: function() {
         this.appendDummyInput()
