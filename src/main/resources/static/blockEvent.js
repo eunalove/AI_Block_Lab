@@ -1,8 +1,6 @@
 
-let model, webcam, labelContainer, maxPredictions, url;
+let model, maxPredictions, url;
 let isIos = false;
-// 전역 변수 선언
-let selectedLable;
 
 Blockly.JavaScript['start'] = function(block) {
     console.log("start");
@@ -18,6 +16,12 @@ Blockly.JavaScript['teamMemberId'] = function(block) {
     return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
+Blockly.JavaScript['classification_result_image'] = function(block) {
+    var dropdown_lable = block.getFieldValue('Lable');
+    var code = `'${dropdown_lable}'`;
+    return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
     console.log("url_image_receive");
@@ -27,8 +31,8 @@ Blockly.JavaScript['url_image_receive'] = function(block) {
 
     console.log(url);
     return '\n';
+    //return 'urlImageReceive();\n';
 };
-
 
 Blockly.JavaScript['when_detecting_image'] = async function(block) {
     console.log("when_detecting_image 시작");
@@ -36,19 +40,11 @@ Blockly.JavaScript['when_detecting_image'] = async function(block) {
     return '\n';
 };
 
-Blockly.JavaScript['of_confidence_image'] = function(block) {
-
-    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-    var code = `teamMemberPredictions[${value_name}][Class 1]`;
-
-    return [code, Blockly.JavaScript.ORDER_NONE];
-};
 
 Blockly.JavaScript['classification_result_image'] = function(block) {
-    var dropdown_lable = block.getFieldValue('Lable');
-    var code = `'${dropdown_lable}'`;
-    selectedLable = dropdown_lable;
-    return [code, Blockly.JavaScript.ORDER_NONE];
+    // 로직을 여기에 작성하세요.
+    var code = 'classification_result_image();\n';
+    return code;
 };
 
 Blockly.JavaScript['class_learned_image'] = function(block) {
@@ -147,4 +143,15 @@ Blockly.JavaScript['print'] = function(block) {
     return 'print();\n';
 };
 
+Blockly.JavaScript['show_results_together'] = function(block) {
+    // 로직을 여기에 작성하세요.
+    var code = 'show_results_together();\n';
+    return code;
+};
+
+Blockly.JavaScript['show_results_in_order'] = function(block) {
+    // 로직을 여기에 작성하세요.
+    var code = 'show_results_in_order();\n';
+    return code;
+};
 
