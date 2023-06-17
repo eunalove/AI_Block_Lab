@@ -1,4 +1,4 @@
-let temMemberId_dropdown_lable;
+
 //블록 드래그, 생성, 삭제가 동기화되어야함
 
 Blockly.Blocks['start'] = {
@@ -183,9 +183,12 @@ Blockly.Blocks['when_detecting_text'] = {
 
 Blockly.Blocks['of_confidence_image'] = {
     init: function() {
-        this.appendValueInput("NAME")
+        this.appendValueInput("teamId")
             .setCheck(null)
-            .appendField("신뢰도");
+            .appendField("팀원의");
+        this.appendValueInput("confidence")
+            .setCheck(null)
+            .appendField("클래스 신뢰도");
         this.setOutput(true, null);
         this.setColour(230);
         this.setTooltip("");
@@ -385,7 +388,7 @@ window.close();
 
 Blockly.Blocks['classification_result_image'] = {
     init: function() {
-        var input = this.appendValueInput("NAME")
+        var input = this.appendDummyInput()
             .appendField('이미지 분류결과')
             .appendField(new Blockly.FieldDropdown(
                 this.generateOptions), 'Lable');
@@ -411,7 +414,7 @@ Blockly.Blocks['classification_result_image'] = {
 
 
 Blockly.JavaScript['teamMemberId'] = function(block) {
-    temMemberId_dropdown_lable = block.getFieldValue('Lable');
+    var temMemberId_dropdown_lable = block.getFieldValue('Lable');
     var code = `'${temMemberId_dropdown_lable}'`;
     return [code, Blockly.JavaScript.ORDER_NONE];
 };
@@ -426,10 +429,13 @@ Blockly.JavaScript['classification_result_image'] = function(block) {
 };
 
 Blockly.JavaScript['of_confidence_image'] = function(block) {
-    var class_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-    class_name = class_name.replace(/[\(\)']/g, "").trim();
+    var class_name = Blockly.JavaScript.valueToCode(block, 'confidence', Blockly.JavaScript.ORDER_ATOMIC);
+    var temMemberId = Blockly.JavaScript.valueToCode(block, 'teamId', Blockly.JavaScript.ORDER_ATOMIC);
 
-    var code = `teamMemberPredictions['${temMemberId_dropdown_lable}']['${class_name}']`;
+    class_name = class_name.replace(/[\(\)']/g, "").trim();
+    temMemberId = temMemberId.replace(/[\(\)']/g, "").trim();
+
+    var code = `teamMemberPredictions['${temMemberId}']['${class_name}']`;
 
     return [code, Blockly.JavaScript.ORDER_NONE];
 };
