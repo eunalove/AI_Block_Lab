@@ -10,24 +10,12 @@ Blockly.JavaScript['start'] = function(block) {
     return '\n';
 };
 
-Blockly.JavaScript['teamMemberId'] = function(block) {
-    var dropdown_lable = block.getFieldValue('Lable');
-    var code = `'${dropdown_lable}'`;
-    return [code, Blockly.JavaScript.ORDER_NONE];
-};
-
-Blockly.JavaScript['classification_result_image'] = function(block) {
-    var dropdown_lable = block.getFieldValue('Lable');
-    var code = `'${dropdown_lable}'`;
-    return [code, Blockly.JavaScript.ORDER_NONE];
-};
-
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
     console.log("url_image_receive");
 
     url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
-   // url = Blockly.JavaScript.valueToCode(block, 'url_image', Blockly.JavaScript.ORDER_NONE) || '""';
+    // url = Blockly.JavaScript.valueToCode(block, 'url_image', Blockly.JavaScript.ORDER_NONE) || '""';
 
     console.log(url);
     return '\n';
@@ -40,12 +28,6 @@ Blockly.JavaScript['when_detecting_image'] = async function(block) {
     return '\n';
 };
 
-
-Blockly.JavaScript['classification_result_image'] = function(block) {
-    // 로직을 여기에 작성하세요.
-    var code = 'classification_result_image();\n';
-    return code;
-};
 
 Blockly.JavaScript['class_learned_image'] = function(block) {
     // 로직을 여기에 작성하세요.
@@ -130,12 +112,6 @@ Blockly.JavaScript['class_learned_text'] = function(block) {
     return code;
 };
 
-Blockly.JavaScript['combine_letters'] = function(block) {
-    // 로직을 여기에 작성하세요.
-    var code = 'combine_letters();\n';
-    return code;
-};
-//뭐임..?
 Blockly.JavaScript['print'] = function(block) {
     // 로직을 여기에 작성하세요.
     var text = Blockly.JavaScript.valueToCode(block, 'text', Blockly.JavaScript.ORDER_NONE) || '""';
@@ -143,15 +119,4 @@ Blockly.JavaScript['print'] = function(block) {
     return 'print();\n';
 };
 
-Blockly.JavaScript['show_results_together'] = function(block) {
-    // 로직을 여기에 작성하세요.
-    var code = 'show_results_together();\n';
-    return code;
-};
-
-Blockly.JavaScript['show_results_in_order'] = function(block) {
-    // 로직을 여기에 작성하세요.
-    var code = 'show_results_in_order();\n';
-    return code;
-};
 
