@@ -1,4 +1,4 @@
-
+let temMemberId_dropdown_lable;
 //블록 드래그, 생성, 삭제가 동기화되어야함
 
 Blockly.Blocks['start'] = {
@@ -12,11 +12,9 @@ Blockly.Blocks['start'] = {
     }
 };
 
-
-
 Blockly.Blocks['teamMemberId'] = {
     init: function () {
-        var input = this.appendValueInput("NAME")
+        var input = this.appendDummyInput()
             .appendField('팀원 아이디')
             .appendField(new Blockly.FieldDropdown(
                 this.generateOptions), 'Lable');
@@ -50,17 +48,6 @@ Blockly.Blocks['learning_image_ai'] = {
     }
 };
 
-/*    Blockly.Blocks['get_image_input'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("이미지 입력받기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };*/
 
 Blockly.Blocks['learning_voice_ai'] = {
     init: function() {
@@ -198,7 +185,7 @@ Blockly.Blocks['of_confidence_image'] = {
     init: function() {
         this.appendValueInput("NAME")
             .setCheck(null)
-            .appendField("의 신뢰도");
+            .appendField("신뢰도");
         this.setOutput(true, null);
         this.setColour(230);
         this.setTooltip("");
@@ -210,7 +197,7 @@ Blockly.Blocks['of_confidence_voice'] = {
     init: function() {
         this.appendValueInput("NAME")
             .setCheck(null)
-            .appendField("의 신뢰도");
+            .appendField("신뢰도");
         this.setOutput(true, null);
         this.setColour(285);
         this.setTooltip("");
@@ -222,7 +209,7 @@ Blockly.Blocks['of_confidence_text'] = {
     init: function() {
         this.appendValueInput("NAME")
             .setCheck(null)
-            .appendField("의 신뢰도");
+            .appendField("신뢰도");
         this.setOutput(true, null);
         this.setColour(180);
         this.setTooltip("");
@@ -267,7 +254,6 @@ Blockly.JavaScript['classify_by_trained_model_image'] = async function(block) {
                                  <img id="output" autoplay class="img-fluid">
 
                             </div>
-                            <div id="streamingSection" class="row justify-content-center">
                                 <video id="video" autoplay></video>
                                 <canvas id="canvas" width="300" height="300" class="d-none"></canvas>
                             </div>
@@ -384,9 +370,6 @@ window.close();
                 }
                 teamMemberPredictions[userId] = memberPredictions;
 
-                console.log("여긴 teamMemberPredictions넣는 곳임");
-                console.log(teamMemberPredictions);
-
             } else {
                 console.log("No image to classify.");
             }
@@ -398,20 +381,11 @@ window.close();
 
 };
 
-Blockly.JavaScript['of_confidence_image'] = function(block) {
-    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-    console.log(teamMemberPredictions);
-    console.log(teamMemberPredictions[value_name]);
-
-    console.log("The confidence of "+ ' + value_name + ' + " is: " + teamMemberPredictions['+ value_name.trim() + ']["Class 1"]);
-    var code ='\n';
-    return [code, Blockly.JavaScript.ORDER_NONE];
-};
 
 
 Blockly.Blocks['classification_result_image'] = {
     init: function() {
-        var input = this.appendDummyInput()
+        var input = this.appendValueInput("NAME")
             .appendField('이미지 분류결과')
             .appendField(new Blockly.FieldDropdown(
                 this.generateOptions), 'Lable');
@@ -419,6 +393,7 @@ Blockly.Blocks['classification_result_image'] = {
         this.setOutput(true, null);
         this.setColour(230);
     }
+
     ,
     generateOptions: function() {
         var options = [];
@@ -432,6 +407,31 @@ Blockly.Blocks['classification_result_image'] = {
 
         return options;
     }
+};
+
+
+Blockly.JavaScript['teamMemberId'] = function(block) {
+    temMemberId_dropdown_lable = block.getFieldValue('Lable');
+    var code = `'${temMemberId_dropdown_lable}'`;
+    return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+//teamMemberPredictions때문에 일단 Define.js로 옮김
+
+Blockly.JavaScript['classification_result_image'] = function(block) {
+    var image_class_dropdown_lable = block.getFieldValue('Lable');
+    console.log('classification_result_image'+image_class_dropdown_lable);
+    var code = `'${image_class_dropdown_lable}'`;
+    return [code, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.JavaScript['of_confidence_image'] = function(block) {
+    var class_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    class_name = class_name.replace(/[\(\)']/g, "").trim();
+
+    var code = `teamMemberPredictions['${temMemberId_dropdown_lable}']['${class_name}']`;
+
+    return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
 
