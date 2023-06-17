@@ -13,8 +13,14 @@ function connect(userId, userInvitationLink) {
         stompClient.subscribe('/topic/receiveChat/' + userInvitationLink, function (receiveMsg) {
             console.log('showGreeting:');
             const receivedMessage = JSON.parse(receiveMsg.body);
-            addMessageToChat(receivedMessage.senderName , receivedMessage.message, receivedMessage.senderName  === chat_userId);
 
+            // If received message is an array, update logged in users and dropdown
+            if (Array.isArray(receivedMessage)) {
+                loggedInUsers = receivedMessage;
+                Blockly.Blocks['teamMemberId'].updateDropdown();
+            } else {
+                addMessageToChat(receivedMessage.senderName, receivedMessage.message, receivedMessage.senderName === chat_userId);
+            }
         });
 
         stompClient.subscribe('/topic/receiveBlock/' + userInvitationLink, function (synBlockMsg) {
@@ -57,7 +63,6 @@ function addMessageToChat(senderName, message, isMyMessage) {
         newMessage.style.margin = '10px 20px';
         newMessage.style.textAlign = 'center';
         chatUl.appendChild(newMessage);
-
 
     }else {
         appendMessageTag(LR_className, senderName, message);

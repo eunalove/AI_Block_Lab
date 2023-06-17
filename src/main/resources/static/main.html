@@ -26,6 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
 <script type="text/javascript"></script>
 
+<script src="blockDefine.js"></script>
 <script src="blockEvent.js"></script>
 
 <body>
@@ -52,502 +53,6 @@
 
 <div id='label-container'></div>
 
-<script>
-
-    //블록 드래그, 생성, 삭제가 동기화되어야함
-
-    Blockly.Blocks['start'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("\"시작하기\"");
-            this.setNextStatement(true, null);
-            this.setColour(135);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['learning_image_ai'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("이미지 인공지능 학습하기");
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-/*    Blockly.Blocks['get_image_input'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("이미지 입력받기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };*/
-
-    Blockly.Blocks['learning_voice_ai'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("음성 인공지능 학습하기");
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['learning_text_ai'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("텍스트 인공지능 학습하기");
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['url_image_receive'] = {
-        init: function() {
-            this.appendValueInput("url_image")
-                .setCheck(null)
-                .appendField("이미지 분류 모델 URL 입력");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-
-    Blockly.Blocks['classify_by_trained_model_image'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습한 이미지 모델로 분류하기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['classify_by_trained_model_voice'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습한 음성 모델로 분류하기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['classify_by_trained_model_text'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습한 텍스트 모델로 분류하기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['turn_on_the_voice'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("음성 켜기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['turn_on_the_text'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("텍스트 입력하기");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['when_detecting_image'] = {
-        init: function() {
-            this.appendValueInput("class_image")
-                .setCheck(null)
-                .appendField("감지했을 때");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['when_detecting_voice'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("감지했을 때");
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['when_detecting_text'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("감지했을 때");
-            this.setPreviousStatement(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['of_confidence_image'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("의 신뢰도");
-            this.setOutput(true, null);
-            this.setColour(230);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['of_confidence_voice'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("의 신뢰도");
-            this.setOutput(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['of_confidence_text'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("의 신뢰도");
-            this.setOutput(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    maxPredictions= null;
-    var ClassLabels = [];
-    var outputImage= null;
-
-    Blockly.JavaScript['classify_by_trained_model_image'] = async function(block) {
-
-
-        var imageInputWindow = window.open("", "Image Input", "width=400,height=450");
-        imageInputWindow.document.write(`
-                 <html>
-                    <head>
-                        <title>Image Input</title>
-                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-                       <style>
-    body { background: #f5f5f5; padding: 20px; }
-    #video, #output { max-width: 300px; max-height: 300px; object-fit: cover; }
-    #output { border: 1px solid black; padding:10px; margin-bottom: 10px; display: none; }
-    #video, #canvas { width: 300px; height: 300px }
-    #video {
-     display: none; /* 처음에 비디오가 쓸데없이 공간을 차지하지 못하도록 함*/
-        width: 300px;
-        height: 300px;
-        object-fit: cover;
-    }
-    #streamingSection { display: none; }
-    #capture, #submit, #takePicture, #fileUpload { margin-top: 20px; }
-    .btn { width: 100%; }
-    .form-group { margin-bottom: 1rem; }
-</style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                 <video id="video" autoplay class="img-fluid"></video>
-                                 <img id="output" autoplay class="img-fluid">
-
-                            </div>
-                            <div id="streamingSection" class="row justify-content-center">
-                                <video id="video" autoplay></video>
-                                <canvas id="canvas" width="300" height="300" class="d-none"></canvas>
-                            </div>
-                            <div class="form-group">
-                                <button id="capture" class="btn btn-primary">촬영</button>
-                                <button id="takePicture" class="btn btn-primary d-none">촬영하기</button>
-                            </div>
-                          <div class="form-group">
-    <label class="btn btn-primary btn-block" for="fileUpload">
-        파일 선택
-    </label>
-    <input type="file" class="d-none" id="fileUpload" accept="image/*">
-</div>
-  <div class="form-group">
-                                <button id="submit" class="btn btn-success">선택완료</button>
-                            </div>
-                        </div>
-                    </body>
-                </html>
-                `);
-        var scriptElement = imageInputWindow.document.createElement('script');
-        scriptElement.innerHTML = `
-                    var video = document.getElementById('video');
-                    var canvas = document.getElementById('canvas');
-                    var context = canvas.getContext('2d');
-                    var output = document.getElementById('output');
-                    var captureButton = document.getElementById('capture');
-                    var takePictureButton = document.getElementById('takePicture');
-
-captureButton.addEventListener('click', function() {
-    if (!video.srcObject) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.style.display = "block"; // video를 보이게 합니다.
-            video.srcObject = stream;
-            video.onloadedmetadata = function(e) {
-                video.play();
-            };
-        })
-        .catch(e => console.log(e));
-
-    } else {
-        context.drawImage(video, 0, 0, 300, 300);
-        output.src = canvas.toDataURL('image/png');
-        output.style.display = "block"; // 이미지를 보이게 합니다.
-        video.style.display = "none"; // video를 숨겨 쓸데없는 공간을 차지 하지 않게함
-        video.srcObject.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-    }
-});
-
-
-
-                    takePictureButton.addEventListener('click', function() {
-                        context.drawImage(video, 0, 0, 200, 200);
-                        video.srcObject.getTracks().forEach(track => track.stop());
-                     });
-
-                    document.getElementById('fileUpload').addEventListener('change', function(e) {
-                      var label = this.previousElementSibling;
-    var fileName = this.files[0].name;
-    label.textContent = fileName;
-
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                        output.style.display = "block"; // 이미지를 보이게 합니다.
-                            output.src = e.target.result;
-                             if(video.srcObject) {
-            video.srcObject.getTracks().forEach(track => track.stop());
-            video.srcObject = null;
-        }
-                        };
-                        reader.readAsDataURL(e.target.files[0]);
-                    });
-
-                    document.getElementById('submit').addEventListener('click', function() {
-
-
-
-  var base64Image = output.src;  // Get the base64 data of the image from output src
-window.opener.postMessage(base64Image, '*');
-window.close();
-
-
-
-
-
-                    });
-                `;
-        imageInputWindow.document.body.appendChild(scriptElement);
-
-
-        console.log("classifyByTrainedModelImage");
-        const modelURL = url + 'model.json';
-        const metadataURL = url + 'metadata.json';
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
-
-        ClassLabels = model.getClassLabels();
-
-        window.addEventListener('message', function(event) {
-            outputImage = new Image();
-            outputImage.onload = async function() {
-                // Image has been loaded
-
-                // Classify the image
-                if (outputImage !== null) {
-                    var prediction = await model.predict(outputImage);
-
-                    for (let i = 0; i < maxPredictions; i++) {
-                        const classPrediction =
-                            prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
-                        console.log(classPrediction);
-                    }
-                } else {
-                    console.log("No image to classify.");
-                }
-            };
-            outputImage.src = event.data;
-        }, false);
-
-        return '\n';
-
-    };
-
-    Blockly.Blocks['classification_result_image'] = {
-        init: function() {
-            var input = this.appendDummyInput()
-                .appendField('이미지 분류결과')
-                .appendField(new Blockly.FieldDropdown(
-                    this.generateOptions), 'Lable');
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(230);
-        }
-        ,
-        generateOptions: function() {
-            var options = [];
-            if(maxPredictions){
-                options.pop();
-                for(var i = 0; i < maxPredictions; i++) {
-                    options.push([ClassLabels[i],ClassLabels[i]]);
-                }
-            }
-            options.push([" ", " "]);
-
-            return options;
-        }
-    };
-
-
-
-    Blockly.Blocks['classification_result_voice'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("음성 분류결과");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['classification_result_text'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("텍스트 분류결과");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-
-    Blockly.Blocks['class_learned_voice'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습된 클래스");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(285);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['class_learned_text'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("학습된 클래스");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(180);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['combine_letters'] = {
-        init: function() {
-            this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("글자 결합하기");
-            this.setInputsInline(true);
-            this.setOutput(true, null);
-            this.setColour(30);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['print'] = {
-        init: function() {
-            this.appendValueInput("text")
-                .appendField("출력하기");
-            this.setPreviousStatement(true, null);
-            this.setColour(20);
-            this.setTooltip('');
-            this.setHelpUrl('http://www.example.com/');
-        }
-    };
-
-
-    Blockly.Blocks['show_results_together'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("다함께 결과 보여주기");
-            this.setPreviousStatement(true, null);
-            this.setColour(0);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-    Blockly.Blocks['show_results_in_order'] = {
-        init: function() {
-            this.appendDummyInput()
-                .appendField("순서대로 결과 보여주기");
-            this.setPreviousStatement(true, null);
-            this.setColour(0);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
-
-
-</script>
-
 
 <div class="container">
     <div id="blocklyDiv" class="blocklyDivWrapper" >
@@ -556,6 +61,9 @@ window.close();
     <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
         <category name="시작" colour="#5ba55b">
             <block type="start"></block>
+        </category>
+        <category name="팀원아이디" colour="#A5745B">
+            <block type="teamMemberId"></block>
         </category>
         <category name="이미지 인식" colour="#5b67a5">
 
@@ -886,15 +394,12 @@ window.close();
     </div>
 </div>
 
-<script>
-
-</script>
-
-
 
 <script>
+    document.getElementById('overlay').style.display = 'none';
+    let loggedInUsers = [];
 
-        const joinButton = document.getElementById('join-button');
+    const joinButton = document.getElementById('join-button');
         const authTitle = document.getElementById('auth-title');
         const loginButton = document.getElementById('login-button');
         let isSignUp = false;
@@ -908,9 +413,10 @@ window.close();
         if(isRedirection){
             document.getElementById('overlay').style.display = 'none';
             // 로그인된 사용자의 userId 가져오기
-            const userId = localStorage.getItem("userId");
-            userIdJson = userId;
-            connect(userId, invitationParam);
+            const ExUserId = localStorage.getItem("userId");
+            userIdJson = ExUserId;
+            connect(ExUserId, invitationParam);
+            userId = ExUserId;
             // 이제 isRedirection 값을 로컬 스토리지에서 삭제합니다.
             localStorage.removeItem("isRedirection");
         }
@@ -931,10 +437,10 @@ window.close();
         loginButton.addEventListener('click', () => {
             if (isSignUp) {
                 // 회원가입 처리 코드를 여기에 작성하세요.
-                var userId = document.getElementById("id-input").value;
+                var signIdInput = document.getElementById("id-input").value;
                 var password = document.getElementById("pw-input").value;
 
-                signUp(userId, password)
+                signUp(signIdInput, password)
                     .then(function(response) {
                         if (response.ok) {
                             // 회원가입 성공
@@ -951,10 +457,10 @@ window.close();
                     });
             } else {
                 // 로그인 처리 코드를 여기에 작성하세요.
-                var userId = document.getElementById("id-input").value;
-                userId_Json = userId;
+                var LoginIdInput = document.getElementById("id-input").value;
+                userId_Json = LoginIdInput;
                 var password = document.getElementById("pw-input").value;
-                login(userId, password)
+                login(LoginIdInput, password)
                     .then(async function(response) {
                         if (response.ok) {
 
@@ -962,13 +468,14 @@ window.close();
                             document.getElementById('overlay').style.display = 'none';
 
 
-                            const updateResponse = await updateUserInvitationLink(userId, invitationParam );
+                            const updateResponse = await updateUserInvitationLink(LoginIdInput, invitationParam );
 
                             if (updateResponse.ok) {
                                 console.log("User invitation link updated successfully.");
-                                userIdJson = userId;
+                                userIdJson = LoginIdInput;
 
-                                connect(userId, invitationParam);
+                                userId = LoginIdInput;
+                                connect(LoginIdInput, invitationParam);
 
 
                             } else {
@@ -994,6 +501,9 @@ window.close();
 
         // 이벤트를 JSON으로 변환합니다.
         var eventJson = event.toJson();
+
+        console.log("eventJson:");
+        console.log(eventJson);
 
         if(eventJson.type === "create") {
             console.log("블록생성 보냄")
@@ -1072,7 +582,24 @@ window.close();
                 }
             }));
 
+        }else if(eventJson.type === "change"){
+            console.log("UI변경 보냄")
+            stompClient.send("/app/sendBlock", {}, JSON.stringify({
+                'userId': userIdJson,
+                'userInvitationLink': invitationParam,
+                'event': {
+                    'blockId': eventJson.blockId,
+                    'element': eventJson.element,
+                    'group': eventJson.group,
+                    'name': eventJson.name,
+                    'newValue': eventJson.newValue,
+                    'oldValue': eventJson.oldValue,
+                    'type': eventJson.type
+                }
+            }));
+
         }
+
     });
 
 
@@ -1080,18 +607,6 @@ window.close();
     document.getElementById('startButton').addEventListener('click', function() {
         var workspace = Blockly.getMainWorkspace();
         var topBlocks = workspace.getTopBlocks(true);
-
-        function findBlockInChildren(block, type) {
-            if(block.type === type) {
-                return true;
-            }
-            for(var i = 0; i < block.getChildren().length; i++) {
-                if(findBlockInChildren(block.getChildren()[i], type)) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         topBlocks.forEach(function(block) {
             if(block.type === 'start') {
