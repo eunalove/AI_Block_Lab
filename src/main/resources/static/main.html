@@ -29,6 +29,8 @@
 <script src="blockDefine.js"></script>
 <script src="blockEvent.js"></script>
 
+
+<script src="acorn_interpreter.js"></script>
 <body>
 
 <div id="overlay">
@@ -47,11 +49,6 @@
 <div id="toast" class="toast">
     <span id="toastMessage"></span>
 </div>
-
-
-<div id='webcam-container'></div>
-
-<div id='label-container'></div>
 
 
 <div class="container">
@@ -122,6 +119,7 @@
             <block type="controls_flow_statements" disabled="true">
                 <field name="FLOW">BREAK</field>
             </block>
+            <block type="wait_seconds"></block>
         </category>
 
         <category name="연산" colour="#5B67A5">
@@ -602,20 +600,51 @@
 
     });
 
+    // Function to initialize the API
+    function initApi(interpreter, scope) {
+        // Wrapper for alert
+        let alertWrapper = function(text) {
+            text = text ? text.toString() : '';
+            return interpreter.createPrimitive(alert(text));
+        };
+        interpreter.setProperty(scope, 'alert', interpreter.createNativeFunction(alertWrapper));
+
+        // Other wrappers for prompt, highlightBlock etc. can be defined here.
+        // ...
+
+        // Wrapper for wait function
+        let waitWrapper = function(timeInSeconds, callback) {
+            // Delay the call to the callback.
+            setTimeout(callback, timeInSeconds * 1000);
+        };
+        interpreter.setProperty(scope, 'waitForSeconds', interpreter.createAsyncFunction(waitWrapper));
+    }
 
 
+    // Click event handler
     document.getElementById('startButton').addEventListener('click', function() {
-      //  var workspace = Blockly.getMainWorkspace();
-       // var topBlocks = workspace.getTopBlocks(true);
+        let code = Blockly['JavaScript'].workspaceToCode(workspace);
 
-                let code = Blockly['JavaScript'].workspaceToCode(workspace).replace(/(?<=^|\n)function \w+\(.*\)/g, 'async $&');
-              //  var code = Blockly.JavaScript.blockToCode(block);
-                try {
-                    eval(code);
-                } catch(e) {
-                    alert(e);
+        try {
+            // Create an interpreter
+            let myInterpreter = new Interpreter(code, initApi);
+
+            // Run the interpreter
+            function runInterpreter() {
+                if (myInterpreter.run() === false) {
+                    // Code has finished executing, you might want to do something here.
+                } else {
+                    // If there is more code to execute, call runInterpreter again.
+                    setTimeout(runInterpreter, 1);
                 }
+            }
+
+            runInterpreter();
+        } catch(e) {
+            alert(e);
+        }
     });
+
 
     // 초대 링크 보기 버튼
     document.getElementById('invite-button').addEventListener('click', () => {

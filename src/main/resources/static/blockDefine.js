@@ -219,6 +219,7 @@ Blockly.Blocks['of_confidence_text'] = {
         this.setHelpUrl("");
     }
 };
+/*
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
     console.log("url_image_receive");
@@ -239,6 +240,39 @@ Blockly.JavaScript['url_image_receive'] = function(block) {
     var code = functionName + '("' + url + '");';
     return code;
 };
+*/
+
+Blockly.Blocks['wait_seconds'] = {
+    init: function() {
+        this.appendValueInput("SECONDS")
+            .setCheck("Number")
+            .appendField("초 기다리기");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("Wait for a specified number of seconds");
+        this.setHelpUrl("");
+    }
+};
+
+Blockly.JavaScript['wait_seconds'] = function(block) {
+    const seconds = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC);
+    const code = 'waitForSeconds(' + seconds + ');\n';
+    return code;
+};
+
+function initInterpreterWaitForSeconds(interpreter, globalObject) {
+    // Ensure function name does not conflict with variable names.
+    Blockly.JavaScript.addReservedWords('waitForSeconds');
+
+    const wrapper = interpreter.createAsyncFunction(
+        function(timeInSeconds, callback) {
+            // Delay the call to the callback.
+            setTimeout(callback, timeInSeconds * 1000);
+        });
+    interpreter.setProperty(globalObject, 'waitForSeconds', wrapper);
+}
 
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
