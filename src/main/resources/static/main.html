@@ -605,19 +605,16 @@
 
 
     document.getElementById('startButton').addEventListener('click', function() {
-        var workspace = Blockly.getMainWorkspace();
-        var topBlocks = workspace.getTopBlocks(true);
+      //  var workspace = Blockly.getMainWorkspace();
+       // var topBlocks = workspace.getTopBlocks(true);
 
-        topBlocks.forEach(function(block) {
-            if(block.type === 'start') {
-                var code = Blockly.JavaScript.blockToCode(block);
+                let code = Blockly['JavaScript'].workspaceToCode(workspace).replace(/(?<=^|\n)function \w+\(.*\)/g, 'async $&');
+              //  var code = Blockly.JavaScript.blockToCode(block);
                 try {
                     eval(code);
                 } catch(e) {
                     alert(e);
                 }
-            }
-        });
     });
 
     // 초대 링크 보기 버튼

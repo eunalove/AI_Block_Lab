@@ -48,6 +48,17 @@ Blockly.Blocks['learning_image_ai'] = {
     }
 };
 
+Blockly.Blocks['when_detecting_image'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("이미지 분류되었을 때");
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
 
 Blockly.Blocks['learning_voice_ai'] = {
     init: function() {
@@ -143,18 +154,6 @@ Blockly.Blocks['turn_on_the_text'] = {
     }
 };
 
-Blockly.Blocks['when_detecting_image'] = {
-    init: function() {
-        this.appendValueInput("class_image")
-            .setCheck(null)
-            .appendField("감지했을 때");
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(230);
-        this.setTooltip("");
-        this.setHelpUrl("");
-    }
-};
 
 Blockly.Blocks['when_detecting_voice'] = {
     init: function() {
@@ -189,6 +188,7 @@ Blockly.Blocks['of_confidence_image'] = {
         this.appendValueInput("confidence")
             .setCheck(null)
             .appendField("클래스 신뢰도");
+        this.setInputsInline(true);
         this.setOutput(true, null);
         this.setColour(230);
         this.setTooltip("");
@@ -220,12 +220,53 @@ Blockly.Blocks['of_confidence_text'] = {
     }
 };
 
+Blockly.JavaScript['url_image_receive'] = function(block) {
+    console.log("url_image_receive");
+
+    url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
+    const modelURL = url + 'model.json';
+    const metadataURL = url + 'metadata.json';
+
+    var functionName = Blockly.JavaScript.provideFunction_(
+        'loadModel',
+        ['async function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ + '(url) {',
+            '  const modelURL = url + "model.json";',
+            '  const metadataURL = url + "metadata.json";',
+            '  model = await tmImage.load(modelURL, metadataURL);',
+            '  console.log(model);',
+            '}']);
+
+    var code = functionName + '("' + url + '");';
+    return code;
+};
+
+
+Blockly.JavaScript['url_image_receive'] = function(block) {
+    console.log("url_image_receive");
+
+    url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
+    const modelURL = url + 'model.json';
+    const metadataURL = url + 'metadata.json';
+
+    var functionName = Blockly.JavaScript.provideFunction_(
+        'loadModel',
+        ['async function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ + '(url) {',
+            '  const modelURL = url + "model.json";',
+            '  const metadataURL = url + "metadata.json";',
+            '  model = await tmImage.load(modelURL, metadataURL);',
+            '  console.log(model);',
+            '}']);
+
+    var code = functionName + '("' + url + '");';
+    return code;
+};
+
 maxPredictions= null;
 var ClassLabels = [];
 var outputImage= null;
 var teamMemberPredictions = {};
 
-Blockly.JavaScript['classify_by_trained_model_image'] = async function(block) {
+Blockly.JavaScript['classify_by_trained_model_image'] = function(block) {
 
     var imageInputWindow = window.open("", "Image Input", "width=400,height=450");
     imageInputWindow.document.write(`
@@ -350,9 +391,6 @@ window.close();
 
 
     console.log("classifyByTrainedModelImage");
-    const modelURL = url + 'model.json';
-    const metadataURL = url + 'metadata.json';
-    model = await tmImage.load(modelURL, metadataURL);
     maxPredictions = model.getTotalClasses();
 
     ClassLabels = model.getClassLabels();
@@ -372,7 +410,6 @@ window.close();
                     memberPredictions[prediction[i].className] = classPrediction;
                 }
                 teamMemberPredictions[userId] = memberPredictions;
-
             } else {
                 console.log("No image to classify.");
             }
