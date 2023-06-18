@@ -11,18 +11,9 @@ Blockly.JavaScript['start'] = function(block) {
 };
 
 
-Blockly.JavaScript['url_image_receive'] = function(block) {
-    console.log("url_image_receive");
 
-    url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
-    // url = Blockly.JavaScript.valueToCode(block, 'url_image', Blockly.JavaScript.ORDER_NONE) || '""';
 
-    console.log(url);
-    return '\n';
-    //return 'urlImageReceive();\n';
-};
-
-Blockly.JavaScript['when_detecting_image'] = async function(block) {
+Blockly.JavaScript['when_detecting_image'] = function(block) {
     console.log("when_detecting_image 시작");
 
     return '\n';

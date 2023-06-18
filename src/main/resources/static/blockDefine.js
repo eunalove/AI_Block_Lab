@@ -242,22 +242,16 @@ Blockly.JavaScript['url_image_receive'] = function(block) {
 
 
 Blockly.JavaScript['url_image_receive'] = function(block) {
-    console.log("url_image_receive");
+    var code = `
+    (async function() {
+        console.log("url_image_receive");
 
-    url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
-    const modelURL = url + 'model.json';
-    const metadataURL = url + 'metadata.json';
-
-    var functionName = Blockly.JavaScript.provideFunction_(
-        'loadModel',
-        ['async function ' + Blockly.JavaScript.FUNCTION_NAME_PLACEHOLDER_ + '(url) {',
-            '  const modelURL = url + "model.json";',
-            '  const metadataURL = url + "metadata.json";',
-            '  model = await tmImage.load(modelURL, metadataURL);',
-            '  console.log(model);',
-            '}']);
-
-    var code = functionName + '("' + url + '");';
+        var url = "https://teachablemachine.withgoogle.com/models/okWkNoAb-k/";
+        var modelURL = url + 'model.json';
+        var metadataURL = url + 'metadata.json';
+        var model = await tmImage.load(modelURL, metadataURL);
+        console.log(model);
+    })();\n`;
     return code;
 };
 
