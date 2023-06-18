@@ -605,19 +605,12 @@
         // Wrapper for alert
         let alertWrapper = function(text) {
             text = text ? text.toString() : '';
-            return interpreter.createPrimitive(alert(text));
+            alert(text);
+            return;
         };
         interpreter.setProperty(scope, 'alert', interpreter.createNativeFunction(alertWrapper));
 
-        // Other wrappers for prompt, highlightBlock etc. can be defined here.
-        // ...
-
-        // Wrapper for wait function
-        let waitWrapper = function(timeInSeconds, callback) {
-            // Delay the call to the callback.
-            setTimeout(callback, timeInSeconds * 1000);
-        };
-        interpreter.setProperty(scope, 'waitForSeconds', interpreter.createAsyncFunction(waitWrapper));
+        initInterpreterWaitForSeconds(interpreter, scope);
     }
 
 
